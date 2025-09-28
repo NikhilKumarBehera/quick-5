@@ -1,0 +1,8 @@
+{
+  "name": "Quick5",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "132c6ca9"
+}
