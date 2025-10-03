@@ -1,0 +1,323 @@
+.home-content {
+  --background: #f8f9fa;
+}
+
+// Header Gradient Section
+.header-gradient {
+  background: linear-gradient(135deg, #9333ea 0%, #3b82f6 100%);
+  padding: 48px 24px 32px;
+  border-radius: 0 0 32px 32px;
+  box-shadow: 0 10px 40px rgba(147, 51, 234, 0.3);
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.greeting-section {
+  flex: 1;
+}
+
+.greeting-text {
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.greeting-subtext {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  margin: 0;
+}
+
+.trophy-button {
+  --background: rgba(255, 255, 255, 0.2);
+  --border-radius: 50%;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  height: 48px;
+  width: 48px;
+  backdrop-filter: blur(10px);
+
+  ion-icon {
+    color: white;
+    font-size: 24px;
+  }
+}
+
+// Streak Card
+.streak-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.streak-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.streak-left {
+  flex: 1;
+}
+
+.streak-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.flash-icon {
+  color: #fbbf24;
+  font-size: 18px;
+}
+
+.streak-number {
+  color: white;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.streak-right {
+  text-align: right;
+}
+
+.total-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.total-number {
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+// Main Content
+.main-content {
+  padding: 0 24px 24px;
+}
+
+// Challenge Card
+.challenge-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin: 0 0 24px 0;
+  border: 1px solid #f0f0f0;
+}
+
+ion-card-content {
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.ready-badge {
+  --background: #d1fae5;
+  --color: #059669;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+// Progress Bars
+.progress-bars {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+
+  &.completed {
+    background: #10b981;
+  }
+
+  &.active {
+    background: linear-gradient(90deg, #9333ea 0%, #3b82f6 100%);
+  }
+}
+
+// Challenges Grid
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.challenge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.challenge-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  background: #f3f4f6;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  .challenge-item:first-child & {
+    background: #ede9fe;
+  }
+
+  .challenge-item.completed & {
+    background: #d1fae5;
+  }
+}
+
+.challenge-emoji {
+  font-size: 28px;
+}
+
+.challenge-type {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+}
+
+// Start Button
+.start-button {
+  --background: linear-gradient(90deg, #9333ea 0%, #3b82f6 100%);
+  --border-radius: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --box-shadow: 0 10px 30px rgba(147, 51, 234, 0.3);
+  height: auto;
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 8px;
+
+  ion-icon {
+    margin-left: 8px;
+  }
+}
+
+// Stats Grid
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  margin: 0;
+  border: 1px solid #f0f0f0;
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+}
+
+.stat-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 24px;
+  }
+
+  &.calendar-icon {
+    background: #ede9fe;
+    ion-icon {
+      color: #9333ea;
+    }
+  }
+
+  &.accuracy-icon {
+    background: #dbeafe;
+    ion-icon {
+      color: #3b82f6;
+    }
+  }
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+// Animations
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.challenge-card,
+.stat-card {
+  animation: slideUp 0.5s ease-out;
+}
+
+.stat-card:last-child {
+  animation-delay: 0.1s;
+}

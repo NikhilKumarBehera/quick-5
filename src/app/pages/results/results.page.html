@@ -1,0 +1,73 @@
+<ion-content [fullscreen]="true" class="results-content">
+  <div class="results-wrapper">
+    <!-- Trophy Animation -->
+    <div class="trophy-container">
+      <div class="trophy-glow"></div>
+      <div class="trophy-icon">
+        <ion-icon name="trophy"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Results Title -->
+    <h1 class="results-title">{{ getResultTitle() }}</h1>
+    <p class="results-subtitle">{{ getResultMessage() }}</p>
+
+    <!-- Stats Card -->
+    <ion-card class="stats-card">
+      <ion-card-content>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">{{ correct }}/{{ total }}</div>
+            <div class="stat-label">Correct</div>
+          </div>
+          
+          <div class="stat-divider"></div>
+          
+          <div class="stat-item">
+            <div class="stat-value">{{ time }}</div>
+            <div class="stat-label">Time</div>
+          </div>
+          
+          <div class="stat-divider"></div>
+          
+          <div class="stat-item">
+            <div class="stat-value">+{{ xp }}</div>
+            <div class="stat-label">XP</div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <ion-button 
+        expand="block" 
+        class="home-button"
+        (click)="goHome()">
+        Back to Home
+      </ion-button>
+      
+      <ion-button 
+        expand="block" 
+        fill="outline"
+        class="share-button"
+        (click)="shareResults()">
+        <ion-icon name="share-social-outline" slot="start"></ion-icon>
+        Share Results
+      </ion-button>
+    </div>
+
+    <!-- Streak Badge -->
+    <div class="streak-badge">
+      <ion-icon name="flame" class="flame-icon"></ion-icon>
+      <span>Streak continues: {{ newStreak }} days!</span>
+    </div>
+
+    <!-- Encouragement Message -->
+    <div class="encouragement">
+      <p class="encouragement-text">
+        Come back tomorrow for your next challenge! 🚀
+      </p>
+    </div>
+  </div>
+</ion-content>

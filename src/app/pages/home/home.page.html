@@ -1,0 +1,106 @@
+<ion-content [fullscreen]="true" class="home-content">
+  <!-- Header Section with Gradient -->
+  <div class="header-gradient">
+    <div class="header-content">
+      <div class="greeting-section">
+        <h1 class="greeting-text">Hello, Learner! 👋</h1>
+        <p class="greeting-subtext">Ready for today's challenge?</p>
+      </div>
+      <ion-button 
+        fill="clear" 
+        class="trophy-button"
+        (click)="openAchievements()">
+        <ion-icon name="trophy" slot="icon-only"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Streak Card -->
+    <div class="streak-card">
+      <div class="streak-content">
+        <div class="streak-left">
+          <div class="streak-label">
+            <ion-icon name="flash" class="flash-icon"></ion-icon>
+            <span>Current Streak</span>
+          </div>
+          <div class="streak-number">{{ streakDays }} Days 🔥</div>
+        </div>
+        <div class="streak-right">
+          <div class="total-label">Total Completed</div>
+          <div class="total-number">{{ totalCompleted }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Today's Challenge Card -->
+    <ion-card class="challenge-card">
+      <ion-card-content>
+        <div class="card-header">
+          <h2 class="card-title">Today's Challenge</h2>
+          <ion-badge color="success" class="ready-badge">Ready</ion-badge>
+        </div>
+
+        <!-- Progress Indicators -->
+        <div class="progress-bars">
+          <div 
+            *ngFor="let challenge of challenges; let i = index" 
+            class="progress-bar"
+            [class.completed]="challenge.completed"
+            [class.active]="i === getCompletedCount() && !challenge.completed">
+          </div>
+        </div>
+
+        <!-- Challenge Icons Grid -->
+        <div class="challenges-grid">
+          <div 
+            *ngFor="let challenge of challenges" 
+            class="challenge-item"
+            [class.completed]="challenge.completed">
+            <div class="challenge-icon-wrapper">
+              <span class="challenge-emoji">{{ challenge.icon }}</span>
+            </div>
+            <span class="challenge-type">{{ challenge.type }}</span>
+          </div>
+        </div>
+
+        <!-- Start Button -->
+        <ion-button 
+          expand="block" 
+          class="start-button"
+          (click)="startChallenge()">
+          <span>Start Today's 5</span>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <ion-card class="stat-card">
+        <ion-card-content class="stat-content">
+          <div class="stat-icon-wrapper calendar-icon">
+            <ion-icon name="calendar-outline"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">{{ weeklyCompleted }}</div>
+            <div class="stat-label">This Week</div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="stat-card">
+        <ion-card-content class="stat-content">
+          <div class="stat-icon-wrapper accuracy-icon">
+            <ion-icon name="trending-up-outline"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">{{ accuracy }}%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

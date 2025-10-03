@@ -1,0 +1,76 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="challenge-header">
+    <ion-buttons slot="start">
+      <ion-button (click)="exitChallenge()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+    <ion-title class="challenge-counter">
+      Challenge {{ currentIndex + 1 }} of {{ challenges.length }}
+    </ion-title>
+    
+    <ion-buttons slot="end">
+      <div class="timer-placeholder"></div>
+    </ion-buttons>
+  </ion-toolbar>
+  
+  <!-- Progress Bars -->
+  <div class="progress-container">
+    <div 
+      *ngFor="let challenge of challenges; let i = index" 
+      class="mini-progress-bar"
+      [ngClass]="getProgressBarClass(i)">
+    </div>
+  </div>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="challenge-content">
+  <div class="challenge-wrapper">
+    <!-- Challenge Header -->
+    <div class="challenge-type-header">
+      <div class="challenge-icon-large">{{ currentChallenge.icon }}</div>
+      <div class="challenge-type-info">
+        <div class="challenge-type-label">{{ currentChallenge.type }} Challenge</div>
+        <div class="challenge-type-sub">Test your cognitive skills</div>
+      </div>
+    </div>
+
+    <!-- Question Card -->
+    <ion-card class="question-card">
+      <ion-card-content>
+        <p class="question-text">{{ currentChallenge.question }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Answer Options -->
+    <div class="options-container">
+      <ion-button
+        *ngFor="let option of currentChallenge.options; let i = index"
+        expand="block"
+        [class.selected]="selectedAnswer === i"
+        class="option-button"
+        (click)="selectAnswer(i)">
+        <span class="option-text">{{ option }}</span>
+        <ion-icon 
+          *ngIf="selectedAnswer === i" 
+          name="checkmark-circle" 
+          slot="end"
+          class="check-icon">
+        </ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="footer-toolbar">
+    <ion-button
+      expand="block"
+      [disabled]="selectedAnswer === null"
+      class="next-button"
+      (click)="nextChallenge()">
+      {{ currentIndex < challenges.length - 1 ? 'Next Challenge' : 'Finish' }}
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,55 @@
+<ion-content [fullscreen]="true" class="splash-content">
+  <div class="splash-wrapper">
+    <!-- Logo/Icon -->
+    <div class="logo-container">
+      <div class="logo-glow"></div>
+      <div class="logo-icon">
+        <ion-icon name="bulb"></ion-icon>
+      </div>
+    </div>
+
+    <!-- App Title -->
+    <h1 class="app-title">Quick 5</h1>
+    <p class="app-tagline">Sharpen Your Mind Daily</p>
+
+    <!-- Action Buttons -->
+    <div class="button-container">
+      <ion-button 
+        expand="block" 
+        class="get-started-button"
+        (click)="getStarted()">
+        Get Started
+      </ion-button>
+      
+      <ion-button 
+        expand="block" 
+        fill="outline"
+        class="sign-in-button"
+        (click)="signIn()">
+        I Have An Account
+      </ion-button>
+    </div>
+
+    <!-- Features -->
+    <div class="features-container">
+      <div class="feature-item">
+        <div class="feature-number">5</div>
+        <div class="feature-label">Challenges</div>
+      </div>
+      
+      <div class="feature-divider"></div>
+      
+      <div class="feature-item">
+        <div class="feature-number">3</div>
+        <div class="feature-label">Minutes</div>
+      </div>
+      
+      <div class="feature-divider"></div>
+      
+      <div class="feature-item">
+        <div class="feature-number">100%</div>
+        <div class="feature-label">Offline</div>
+      </div>
+    </div>
+  </div>
+</ion-content>
