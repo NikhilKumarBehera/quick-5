@@ -7,6 +7,7 @@
     </ion-buttons>
     
     <ion-title class="challenge-counter">
+      <span *ngIf="mode === 'category'" class="category-icon-header">{{ getHeaderIcon() }}</span>
       Challenge {{ currentIndex + 1 }} of {{ challenges.length }}
     </ion-title>
     
@@ -32,7 +33,14 @@
       <div class="challenge-icon-large">{{ currentChallenge.icon }}</div>
       <div class="challenge-type-info">
         <div class="challenge-type-label">{{ currentChallenge.type }} Challenge</div>
-        <div class="challenge-type-sub">Test your cognitive skills</div>
+        <div class="challenge-difficulty">
+          <span 
+            class="difficulty-badge" 
+            [style.background-color]="getDifficultyColor(currentChallenge.difficulty)">
+            <span class="difficulty-icon">{{ getDifficultyIcon(currentChallenge.difficulty) }}</span>
+            <span class="difficulty-text">{{ getDifficultyLabel(currentChallenge.difficulty) }}</span>
+          </span>
+        </div>
       </div>
     </div>
 

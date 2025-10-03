@@ -4,12 +4,11 @@ import { AlertController } from '@ionic/angular';
 import { Puzzle, PuzzleService } from 'src/app/services/puzzle-service/puzzle-service';
 import { StorageService } from 'src/app/services/storage-service/storage-service';
 
-
 @Component({
   selector: 'app-challenge',
   templateUrl: './challenge.page.html',
   styleUrls: ['./challenge.page.scss'],
-  standalone: false,
+  standalone: false
 })
 export class ChallengePage implements OnInit {
   challenges: Puzzle[] = [];
@@ -18,6 +17,9 @@ export class ChallengePage implements OnInit {
   correctAnswers: number = 0;
   userAnswers: number[] = [];
   startTime: number = 0;
+  mode: string = 'daily';
+  categoryName: string = '';
+  categoryIcon: string = '';
 
   constructor(
     private router: Router,
@@ -27,8 +29,12 @@ export class ChallengePage implements OnInit {
   ) {
     // Get puzzles from navigation state or load new ones
     const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras?.state?.['puzzles']) {
-      this.challenges = navigation.extras.state['puzzles'];
+    if (navigation?.extras?.state) {
+      const state = navigation.extras.state;
+      this.challenges = state['puzzles'] || [];
+      this.mode = state['mode'] || 'daily';
+      this.categoryName = state['categoryName'] || '';
+      this.categoryIcon = state['categoryIcon'] || '';
     }
   }
 
@@ -49,6 +55,36 @@ export class ChallengePage implements OnInit {
 
   get progress(): number {
     return ((this.currentIndex + 1) / this.challenges.length) * 100;
+  }
+
+  getDifficultyIcon(difficulty: string): string {
+    switch(difficulty) {
+      case 'easy':
+        return '⭐';
+      case 'medium':
+        return '⭐⭐';
+      case 'hard':
+        return '⭐⭐⭐';
+      default:
+        return '⭐';
+    }
+  }
+
+  getDifficultyColor(difficulty: string): string {
+    switch(difficulty) {
+      case 'easy':
+        return '#10b981';
+      case 'medium':
+        return '#f59e0b';
+      case 'hard':
+        return '#ef4444';
+      default:
+        return '#6b7280';
+    }
+  }
+
+  getDifficultyLabel(difficulty: string): string {
+    return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
   }
 
   selectAnswer(index: number) {
@@ -88,19 +124,21 @@ export class ChallengePage implements OnInit {
     // Calculate XP (10 XP per correct answer)
     const xpEarned = this.correctAnswers * 10;
 
-    // Save results to storage
-    const result = {
-      date: new Date().toISOString(),
-      correct: this.correctAnswers,
-      total: this.challenges.length,
-      time: timeString,
-      xp: xpEarned,
-      challenges: this.challenges.map(c => c.id)
-    };
+    // Only save to storage if it's daily mode
+    if (this.mode === 'daily') {
+      const result = {
+        date: new Date().toISOString(),
+        correct: this.correctAnswers,
+        total: this.challenges.length,
+        time: timeString,
+        xp: xpEarned,
+        challenges: this.challenges.map(c => c.id)
+      };
 
-    this.storageService.saveDailyResult(result);
+      this.storageService.saveDailyResult(result);
+      console.log('Challenge completed:', result);
+    }
 
-    console.log('Challenge completed:', result);
     console.log('New progress:', this.storageService.getUserProgress());
     
     // Navigate to results with data
@@ -110,7 +148,9 @@ export class ChallengePage implements OnInit {
         total: this.challenges.length,
         time: timeString,
         xp: xpEarned,
-        challenges: this.challenges
+        challenges: this.challenges,
+        mode: this.mode,
+        categoryName: this.categoryName
       }
     });
   }
@@ -148,5 +188,19 @@ export class ChallengePage implements OnInit {
     if (this.currentChallenge.explanation) {
       alert(this.currentChallenge.explanation);
     }
+  }
+
+  getHeaderTitle(): string {
+    if (this.mode === 'category' && this.categoryName) {
+      return this.categoryName;
+    }
+    return 'Daily Challenge';
+  }
+
+  getHeaderIcon(): string {
+    if (this.mode === 'category' && this.categoryIcon) {
+      return this.categoryIcon;
+    }
+    return '';
   }
 }

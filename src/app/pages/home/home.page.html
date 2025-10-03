@@ -6,10 +6,7 @@
         <h1 class="greeting-text">Hello, Learner! 👋</h1>
         <p class="greeting-subtext">Ready for today's challenge?</p>
       </div>
-      <ion-button 
-        fill="clear" 
-        class="trophy-button"
-        (click)="openAchievements()">
+      <ion-button fill="clear" class="trophy-button" (click)="openAchievements()">
         <ion-icon name="trophy" slot="icon-only"></ion-icon>
       </ion-button>
     </div>
@@ -44,20 +41,14 @@
 
         <!-- Progress Indicators -->
         <div class="progress-bars">
-          <div 
-            *ngFor="let challenge of challenges; let i = index" 
-            class="progress-bar"
-            [class.completed]="challenge.completed"
-            [class.active]="i === getCompletedCount() && !challenge.completed">
+          <div *ngFor="let challenge of challenges; let i = index" class="progress-bar"
+            [class.completed]="challenge.completed" [class.active]="i === getCompletedCount() && !challenge.completed">
           </div>
         </div>
 
         <!-- Challenge Icons Grid -->
         <div class="challenges-grid">
-          <div 
-            *ngFor="let challenge of challenges" 
-            class="challenge-item"
-            [class.completed]="challenge.completed">
+          <div *ngFor="let challenge of challenges" class="challenge-item" [class.completed]="challenge.completed">
             <div class="challenge-icon-wrapper">
               <span class="challenge-emoji">{{ challenge.icon }}</span>
             </div>
@@ -66,10 +57,7 @@
         </div>
 
         <!-- Start Button -->
-        <ion-button 
-          expand="block" 
-          class="start-button"
-          (click)="startChallenge()">
+        <ion-button expand="block" class="start-button" (click)="startChallenge()">
           <span>Start Today's 5</span>
           <ion-icon name="chevron-forward" slot="end"></ion-icon>
         </ion-button>
@@ -102,5 +90,32 @@
         </ion-card-content>
       </ion-card>
     </div>
+
+    <!-- Category Slider Section -->
+    <div class="section-header">
+      <h3 class="section-title">Practice by Category</h3>
+      <p class="section-subtitle">Focus on specific puzzle types</p>
+    </div>
+
+    <!-- Categories Horizontal Scroll -->
+    <div class="categories-scroll-container">
+      <div class="categories-scroll">
+        <div *ngFor="let category of puzzleCategories" class="category-card" [style.background]="category.gradient"
+          (click)="startCategoryChallenge(category)">
+          <div class="category-icon">{{ category.icon }}</div>
+          <h4 class="category-title">{{ category.title }}</h4>
+          <p class="category-description">{{ category.description }}</p>
+          <div class="category-action">
+            <span>Start Practice</span>
+            <ion-icon name="arrow-forward"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+  <div class="footer-note">
+  <p>🇮🇳 Made in India with ❤️</p>
+  <p class="author">— Nikhil</p>
+</div>
 </ion-content>
