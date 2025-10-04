@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { Puzzle, PuzzleService } from 'src/app/services/puzzle-service/puzzle-service';
+import { CategoryProgressService } from 'src/app/services/category-progress-service/category-progress-service';
+import {
+  Puzzle,
+  PuzzleService,
+} from 'src/app/services/puzzle-service/puzzle-service';
 import { StorageService } from 'src/app/services/storage-service/storage-service';
 
 @Component({
   selector: 'app-challenge',
   templateUrl: './challenge.page.html',
   styleUrls: ['./challenge.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class ChallengePage implements OnInit {
   challenges: Puzzle[] = [];
@@ -20,12 +24,14 @@ export class ChallengePage implements OnInit {
   mode: string = 'daily';
   categoryName: string = '';
   categoryIcon: string = '';
+  userResults: { categoryType: string; isCorrect: boolean }[] = [];
 
   constructor(
     private router: Router,
     private alertController: AlertController,
     private puzzleService: PuzzleService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private categoryProgressService: CategoryProgressService
   ) {
     // Get puzzles from navigation state or load new ones
     const navigation = this.router.getCurrentNavigation();
@@ -40,7 +46,7 @@ export class ChallengePage implements OnInit {
 
   ngOnInit() {
     this.startTime = Date.now();
-    
+
     // If no puzzles were passed, get daily puzzles
     if (this.challenges.length === 0) {
       this.challenges = this.puzzleService.getDailyPuzzles();
@@ -58,7 +64,7 @@ export class ChallengePage implements OnInit {
   }
 
   getDifficultyIcon(difficulty: string): string {
-    switch(difficulty) {
+    switch (difficulty) {
       case 'easy':
         return '⭐';
       case 'medium':
@@ -71,7 +77,7 @@ export class ChallengePage implements OnInit {
   }
 
   getDifficultyColor(difficulty: string): string {
-    switch(difficulty) {
+    switch (difficulty) {
       case 'easy':
         return '#10b981';
       case 'medium':
@@ -96,13 +102,22 @@ export class ChallengePage implements OnInit {
 
     // Record answer
     this.userAnswers.push(this.selectedAnswer);
-    
+
+    // Store result
+    this.userResults.push({
+      categoryType: this.currentChallenge.type,
+      isCorrect: this.selectedAnswer === this.currentChallenge.correctAnswer,
+    });
+
     // Check if correct
     if (this.selectedAnswer === this.currentChallenge.correctAnswer) {
       this.correctAnswers++;
       console.log('✅ Correct answer!');
     } else {
-      console.log('❌ Wrong answer. Correct was:', this.currentChallenge.correctAnswer);
+      console.log(
+        '❌ Wrong answer. Correct was:',
+        this.currentChallenge.correctAnswer
+      );
     }
 
     // Move to next or finish
@@ -120,7 +135,7 @@ export class ChallengePage implements OnInit {
     const minutes = Math.floor(totalTime / 60);
     const seconds = totalTime % 60;
     const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    
+
     // Calculate XP (10 XP per correct answer)
     const xpEarned = this.correctAnswers * 10;
 
@@ -132,7 +147,7 @@ export class ChallengePage implements OnInit {
         total: this.challenges.length,
         time: timeString,
         xp: xpEarned,
-        challenges: this.challenges.map(c => c.id)
+        challenges: this.challenges.map((c) => c.id),
       };
 
       this.storageService.saveDailyResult(result);
@@ -140,7 +155,10 @@ export class ChallengePage implements OnInit {
     }
 
     console.log('New progress:', this.storageService.getUserProgress());
-    
+
+    // Update progress for all categories at once
+    this.categoryProgressService.updateMultipleCategories(this.userResults);
+
     // Navigate to results with data
     this.router.navigate(['/results'], {
       state: {
@@ -150,8 +168,8 @@ export class ChallengePage implements OnInit {
         xp: xpEarned,
         challenges: this.challenges,
         mode: this.mode,
-        categoryName: this.categoryName
-      }
+        categoryName: this.categoryName,
+      },
     });
   }
 
@@ -162,16 +180,16 @@ export class ChallengePage implements OnInit {
       buttons: [
         {
           text: 'Cancel',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Exit',
           role: 'destructive',
           handler: () => {
             this.router.navigate(['/home']);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();

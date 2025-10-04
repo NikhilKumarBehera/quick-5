@@ -1,0 +1,140 @@
+<ion-header class="ion-no-border">
+</ion-header>
+
+<ion-content [fullscreen]="true" class="achievements-content" [scrollEvents]="true" (ionScroll)="onScroll($event)">
+
+  <!-- Header Stats Card -->
+  <div class="achievements-header" [class.scrolled]="isScrolled">
+    <div class="header-top">
+      <ion-button fill="clear" class="back-button" (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <h1 class="page-title">Achievements</h1>
+
+      <!-- Compact achievement count (shows when scrolled) -->
+      <div class="compact-count" *ngIf="isScrolled">
+        <ion-icon name="trophy"></ion-icon>
+        <span>{{ progress.unlocked }}/{{ progress.total }}</span>
+      </div>
+    </div>
+    <div class="stats-card" [class.hidden]="isScrolled">
+      <div class="trophy-animation">
+        <div class="trophy-glow"></div>
+        <ion-icon name="trophy" class="trophy-icon"></ion-icon>
+      </div>
+      <div class="stats-info">
+        <h2 class="stats-number">{{ progress.unlocked }}/{{ progress.total }}</h2>
+        <p class="stats-label">Achievements Unlocked</p>
+      </div>
+      <div class="progress-circle">
+        <svg class="circle-svg" viewBox="0 0 100 100">
+          <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+          <circle class="circle-progress" cx="50" cy="50" r="40" [style.stroke-dashoffset]="getProgressOffset()">
+          </circle>
+        </svg>
+        <span class="circle-text">{{ progress.percentage }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOVE Category tabs here (sticky below header) -->
+  <!-- Category Filter Tabs -->
+  <div class="category-tabs sticky-tabs">
+    <div class="tabs-scroll-container" #tabsContainer>
+      <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange($event)" mode="md">
+        <ion-segment-button value="all" #segmentButton>
+          <ion-label>All</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="streak" #segmentButton>
+          <ion-label>🔥 Streak</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="accuracy" #segmentButton>
+          <ion-label>🎯 Accuracy</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="completion" #segmentButton>
+          <ion-label>📚 Completion</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="mastery" #segmentButton>
+          <ion-label>🏆 Mastery</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+  </div>
+
+  <!-- Achievements List -->
+  <div class="achievements-container">
+
+    <!-- Unlocked Achievements -->
+    <div class="achievements-section" *ngIf="getFilteredUnlocked().length > 0">
+      <h3 class="section-title">
+        <span class="title-icon">✨</span>
+        Unlocked ({{ getFilteredUnlocked().length }})
+      </h3>
+
+      <div class="achievements-grid">
+        <div *ngFor="let achievement of getFilteredUnlocked()" class="achievement-card unlocked"
+          [style.background]="achievement.gradient">
+          <div class="achievement-badge">
+            <div class="badge-glow"></div>
+            <span class="badge-icon">{{ achievement.icon }}</span>
+          </div>
+          <div class="achievement-info">
+            <h4 class="achievement-title">{{ achievement.title }}</h4>
+            <p class="achievement-description"  style="color: white;">{{ achievement.description }}</p>
+            <div class="achievement-date" *ngIf="achievement.unlockedDate">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              <span>{{ formatDate(achievement.unlockedDate) }}</span>
+            </div>
+          </div>
+          <div class="achievement-check">
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Locked Achievements -->
+    <div class="achievements-section" *ngIf="getFilteredLocked().length > 0">
+      <h3 class="section-title">
+        <span class="title-icon">🔒</span>
+        Locked ({{ getFilteredLocked().length }})
+      </h3>
+
+      <div class="achievements-grid">
+        <div *ngFor="let achievement of getFilteredLocked()" class="achievement-card locked">
+          <div class="achievement-badge">
+            <span class="badge-icon grayscale">{{ achievement.icon }}</span>
+          </div>
+          <div class="achievement-info">
+            <h4 class="achievement-title">{{ achievement.title }}</h4>
+            <p class="achievement-description">{{ achievement.description }}</p>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" [style.width.%]="getProgressPercentage(achievement)"
+                  [style.background]="achievement.gradient">
+                </div>
+              </div>
+              <span class="progress-text">
+                {{ achievement.currentProgress }} / {{ achievement.requirement }}
+              </span>
+            </div>
+          </div>
+          <div class="achievement-lock">
+            <ion-icon name="lock-closed"></ion-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="getFilteredUnlocked().length === 0 && getFilteredLocked().length === 0">
+      <div class="empty-icon">🎯</div>
+      <h3>No achievements in this category</h3>
+      <p>Try a different category filter</p>
+    </div>
+
+  </div>
+
+</ion-content>

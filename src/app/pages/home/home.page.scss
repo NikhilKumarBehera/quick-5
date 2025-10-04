@@ -271,12 +271,12 @@ ion-card-content {
   padding-right: 24px;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
     display: none;
   }
-  
+
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -383,6 +383,7 @@ ion-card-content {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -400,7 +401,9 @@ ion-card-content {
 
 .category-card {
   animation: slideUp 0.5s ease-out;
-}.home-content {
+}
+
+.home-content {
   --background: #f8f9fa;
 }
 
@@ -673,6 +676,7 @@ ion-card-content {
 
   &.calendar-icon {
     background: #ede9fe;
+
     ion-icon {
       color: #9333ea;
     }
@@ -680,6 +684,7 @@ ion-card-content {
 
   &.accuracy-icon {
     background: #dbeafe;
+
     ion-icon {
       color: #3b82f6;
     }
@@ -709,6 +714,7 @@ ion-card-content {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -730,6 +736,7 @@ ion-card-content {
   font-size: 14px;
   color: var(--ion-color-medium);
 }
+
 .footer-note .author {
   font-weight: bold;
   margin-top: 4px;
@@ -748,4 +755,291 @@ ion-card-content {
   justify-content: space-between;
   align-items: center;
   padding: 12px;
+}
+
+// Scroll animation for header
+.header-gradient {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.scrolled {
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    .header-content {
+      margin-bottom: 0;
+    }
+
+    .greeting-text {
+      font-size: 22px;
+    }
+  }
+}
+
+.header-content {
+  transition: margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.greeting-text {
+  transition: font-size 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.greeting-subtext {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 24px;
+  overflow: hidden;
+
+  &.hidden {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+  }
+}
+
+.streak-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 200px;
+  overflow: hidden;
+
+  &.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+    max-height: 0;
+    padding: 0;
+    margin-bottom: 0;
+  }
+}
+
+// Circular progress styles
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.circular-progress {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 3;
+}
+
+.progress-ring-circle {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 125.6;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.section-header-games {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 16px 0;
+
+  ion-icon {
+    font-size: 28px;
+    color: #667eea;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #1e293b;
+  }
+
+  p {
+    margin: 2px 0 0 0;
+    font-size: 13px;
+    color: #64748b;
+  }
+}
+
+.games-hero-card {
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 28px 20px;
+  margin: 0 0 24px 0;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.games-hero-card:active {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+}
+
+.games-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 0.15;
+}
+
+.float-icon {
+  position: absolute;
+  font-size: 40px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.icon-1 {
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.icon-2 {
+  top: 20%;
+  right: 10%;
+  animation-delay: 0.7s;
+}
+
+.icon-3 {
+  bottom: 20%;
+  left: 15%;
+  animation-delay: 1.4s;
+}
+
+.icon-4 {
+  bottom: 15%;
+  right: 15%;
+  animation-delay: 2.1s;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+}
+
+.games-content {
+  position: relative;
+  z-index: 1;
+  color: white;
+}
+
+.games-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.3);
+  }
+}
+
+.games-content h3 {
+  font-size: 22px;
+  font-weight: 900;
+  margin: 0 0 8px 0;
+}
+
+.games-content p {
+  font-size: 14px;
+  margin: 0 0 16px 0;
+  opacity: 0.95;
+  line-height: 1.5;
+}
+
+.games-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.game-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.play-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: #667eea;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.play-btn:active {
+  transform: scale(0.95);
+}
+
+.play-btn ion-icon {
+  font-size: 20px;
 }

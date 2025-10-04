@@ -22,6 +22,14 @@ const routes: Routes = [
   {
     path: 'results',
     loadChildren: () => import('./pages/results/results.module').then(m => m.ResultsPageModule)
+  },
+  {
+    path: 'achievements',
+    loadChildren: () => import('./pages/achievements/achievements.module').then( m => m.AchievementsPageModule)
+  },
+  {
+    path: 'games',
+    loadChildren: () => import('./pages/games/games.module').then( m => m.GamesPageModule)
   }
 ];
 @NgModule({

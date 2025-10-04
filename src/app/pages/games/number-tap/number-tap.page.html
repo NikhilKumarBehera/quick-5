@@ -1,0 +1,250 @@
+<!-- ============================================ -->
+<!-- number-tap.page.html - EXCITING REDESIGN -->
+<!-- ============================================ -->
+
+<ion-content [fullscreen]="true" class="number-tap-content" (ionScroll)="onScroll($event)" [scrollEvents]="true">
+
+  <!-- Unified Header (like achievement) -->
+  <div class="game-header" [class.scrolled]="isScrolled">
+    <div class="header-top">
+      <ion-button fill="clear" class="back-button" (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <h1 class="page-title">Number Tap Challenge</h1>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-area">
+
+    <!-- Game Header (during gameplay) -->
+    <div class="gameplay-header" *ngIf="gameStarted && !gameOver">
+      <div class="timer-display">
+        <ion-icon name="stopwatch"></ion-icon>
+        <span>{{ formatTime(currentTime) }}</span>
+      </div>
+      <div class="next-bubble">
+        Next: <strong>{{ nextNumber }}</strong>
+      </div>
+    </div>
+
+    <!-- START SCREEN -->
+    <div class="start-screen" *ngIf="!gameStarted">
+
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="hero-icon">
+          <div class="pulse-ring"></div>
+          <div class="pulse-ring delay"></div>
+          <span class="icon-emoji">🔢</span>
+        </div>
+        <h2>Number Tap Challenge</h2>
+        <p class="tagline">Test your speed and focus!</p>
+      </div>
+
+      <!-- How to Play Card -->
+      <div class="rules-card">
+        <div class="rules-header">
+          <ion-icon name="information-circle"></ion-icon>
+          <h3>How to Play</h3>
+        </div>
+        <div class="rules-list">
+          <div class="rule-item">
+            <div class="rule-number">1</div>
+            <div class="rule-text">
+              <strong>Tap numbers in order</strong>
+              <span>Start from 1 and tap in ascending sequence</span>
+            </div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-number">2</div>
+            <div class="rule-text">
+              <strong>Timer starts on first tap</strong>
+              <span>Your time begins when you tap number 1</span>
+            </div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-number">3</div>
+            <div class="rule-text">
+              <strong>Complete as fast as possible</strong>
+              <span>Beat your best time and earn stars!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best Scores -->
+      <div class="best-scores-section" *ngIf="hasBestScores()">
+        <h3 class="scores-title">🏆 Your Best Times</h3>
+        <div class="best-scores-grid">
+          <div class="best-score-card" *ngIf="easyBest">
+            <div class="score-icon">😊</div>
+            <div class="score-time">{{ easyBest }}s</div>
+            <div class="score-label">Easy</div>
+          </div>
+          <div class="best-score-card" *ngIf="mediumBest">
+            <div class="score-icon">⚡</div>
+            <div class="score-time">{{ mediumBest }}s</div>
+            <div class="score-label">Medium</div>
+          </div>
+          <div class="best-score-card" *ngIf="hardBest">
+            <div class="score-icon">🔥</div>
+            <div class="score-time">{{ hardBest }}s</div>
+            <div class="score-label">Hard</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Difficulty Selection -->
+      <div class="difficulty-section">
+        <h3 class="section-heading">Select Difficulty</h3>
+
+        <div class="difficulty-grid">
+          <button class="diff-card" [class.active]="size === 3" (click)="setDifficulty(3)">
+            <div class="diff-emoji">😊</div>
+            <div class="diff-name">Easy</div>
+            <div class="diff-detail">3×3 Grid</div>
+            <div class="diff-count">9 Numbers</div>
+            <div class="checkmark" *ngIf="size === 3">✓</div>
+          </button>
+
+          <button class="diff-card" [class.active]="size === 4" (click)="setDifficulty(4)">
+            <div class="diff-emoji">⚡</div>
+            <div class="diff-name">Medium</div>
+            <div class="diff-detail">4×4 Grid</div>
+            <div class="diff-count">16 Numbers</div>
+            <div class="checkmark" *ngIf="size === 4">✓</div>
+          </button>
+
+          <button class="diff-card" [class.active]="size === 5" (click)="setDifficulty(5)">
+            <div class="diff-emoji">🔥</div>
+            <div class="diff-name">Hard</div>
+            <div class="diff-detail">5×5 Grid</div>
+            <div class="diff-count">25 Numbers</div>
+            <div class="checkmark" *ngIf="size === 5">✓</div>
+          </button>
+        </div>
+
+        <button class="start-btn" (click)="startGame()">
+          <div class="btn-shine"></div>
+          <ion-icon name="play-circle"></ion-icon>
+          <span>Start Game</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div class="game-screen" *ngIf="gameStarted && !gameOver">
+
+      <!-- Progress Card -->
+      <div class="progress-card">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getProgress()"></div>
+        </div>
+        <div class="progress-text">{{ tapped.length }} / {{ size * size }}</div>
+      </div>
+
+      <!-- Game Grid -->
+      <div class="grid-container">
+        <div class="grid size-{{size}}">
+          <button class="cell" *ngFor="let num of numbers" (click)="tapNumber(num)"
+            [class.tapped]="tapped.includes(num)" [class.pulse]="correctTap === num" [disabled]="tapped.includes(num)">
+            {{ num }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Floating Combo -->
+      <div class="combo-toast" *ngIf="showCombo" [@comboSlide]>
+        <span class="combo-fire">🔥</span>
+        <span class="combo-text">{{ combo }}x COMBO!</span>
+      </div>
+
+    </div>
+
+    <!-- GAME OVER SCREEN -->
+    <div class="gameover-screen" *ngIf="gameOver">
+
+      <!-- Confetti -->
+      <div class="confetti-container">
+        <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"></div>
+      </div>
+
+      <!-- Trophy Section -->
+      <div class="trophy-section">
+        <div class="trophy-icon">🏆</div>
+        <h1>{{ getVictoryMessage() }}</h1>
+        <p class="subtitle">{{ isNewRecord ? '🎉 New Best Time!' : 'Challenge Completed' }}</p>
+      </div>
+
+      <!-- Results Card -->
+      <div class="results-card">
+        <div class="main-result">
+          <div class="result-icon">⏱️</div>
+          <div class="result-time">{{ finalTime }}s</div>
+          <div class="result-label">COMPLETION TIME</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value">{{ size }}×{{ size }}</div>
+            <div class="stat-label">Difficulty</div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value">{{ size * size }}</div>
+            <div class="stat-label">Numbers</div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-value">{{ avgSpeed }}s</div>
+            <div class="stat-label">Avg Tap</div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-value">{{ getRating() }}</div>
+            <div class="stat-label">Rating</div>
+          </div>
+        </div>
+
+        <div class="best-time-section" *ngIf="previousBest">
+          <div class="best-time-label">Previous Best</div>
+          <div class="best-time-comparison">
+            <span class="prev-time">{{ previousBest }}s</span>
+            <ion-icon [name]="isNewRecord ? 'arrow-down-circle' : 'arrow-up-circle'" [class.better]="isNewRecord"
+              [class.worse]="!isNewRecord"></ion-icon>
+            <span class="improvement" [class.better]="isNewRecord">
+              {{ getTimeDifference() }}s
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="action-btn primary" (click)="playAgain()">
+          <ion-icon name="refresh-circle"></ion-icon>
+          <span>Play Again</span>
+        </button>
+
+        <button class="action-btn secondary" (click)="shareResult()">
+          <ion-icon name="share-social"></ion-icon>
+          <span>Share Result</span>
+        </button>
+
+        <button class="action-btn outline" (click)="changeDifficulty()">
+          <ion-icon name="options"></ion-icon>
+          <span>Change Level</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

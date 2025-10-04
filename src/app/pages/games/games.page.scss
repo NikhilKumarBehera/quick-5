@@ -1,0 +1,416 @@
+// ============================================
+// GAMES PAGE - COMPLETE SCSS
+// ============================================
+
+.games-content {
+  --background: #f8f9fc;
+}
+
+// Header with smooth scroll behavior
+.games-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 16px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: padding 0.3s ease; // Only animate padding
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: #f8f9fc;
+    border-radius: 30px 30px 0 0;
+  }
+
+  &.scrolled {
+    padding: 20px 16px 20px;
+
+    .stats-pills {
+      max-height: 0;
+      padding: 0;
+      margin: 0;
+      opacity: 0;
+    }
+  }
+}
+
+.header-top {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-button {
+  --color: white;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  --padding-start: 0;
+  --padding-end: 0;
+  margin: 0;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+.page-title {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+  flex: 1;
+}
+
+// Compact count (shows when scrolled)
+.compact-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin-left: auto;
+  white-space: nowrap;
+  animation: fadeIn 0.3s ease-out;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Stats pills
+.stats-pills {
+  display: flex;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  max-height: 100px;
+  opacity: 1;
+  overflow: hidden;
+
+  &.hidden {
+    max-height: 0;
+    padding: 0;
+    opacity: 0;
+  }
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 10px 16px;
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+// Content area
+.games-container {
+  padding: 20px 16px 40px;
+  margin-top: -16px;
+}
+
+.section-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+}
+
+// Featured Game Card
+.featured-game-card {
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  margin-bottom: 32px;
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.35);
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 50px rgba(102, 126, 234, 0.45);
+  }
+}
+
+.featured-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: floatParticle 8s ease-in-out infinite;
+
+  &:nth-child(1) {
+    width: 80px;
+    height: 80px;
+    top: 10%;
+    left: 10%;
+  }
+
+  &:nth-child(2) {
+    width: 60px;
+    height: 60px;
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+  }
+
+  &:nth-child(3) {
+    width: 100px;
+    height: 100px;
+    bottom: 10%;
+    left: 60%;
+    animation-delay: 4s;
+  }
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translate(0, 0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(20px, -20px);
+    opacity: 0.6;
+  }
+}
+
+.featured-content {
+  position: relative;
+  z-index: 1;
+  padding: 28px 20px;
+}
+
+.game-icon-large {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.icon-emoji {
+  font-size: 56px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.game-info {
+  text-align: center;
+  color: white;
+}
+
+.game-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.game-info h2 {
+  font-size: 26px;
+  font-weight: 900;
+  margin: 0 0 8px 0;
+}
+
+.game-info p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+  opacity: 0.95;
+}
+
+.difficulty-pills {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.diff-pill {
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+
+  &.easy {
+    background: rgba(74, 222, 128, 0.3);
+  }
+
+  &.medium {
+    background: rgba(251, 191, 36, 0.3);
+  }
+
+  &.hard {
+    background: rgba(239, 68, 68, 0.3);
+  }
+}
+
+.best-scores {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.best-score-item {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .score-label {
+    opacity: 0.9;
+  }
+
+  .score-value {
+    font-weight: 800;
+  }
+}
+
+.play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: white;
+  color: #667eea;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+
+  .play-icon {
+    width: 28px;
+    height: 28px;
+    background: #667eea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+}
+
+// Coming Soon Section
+.coming-soon-section {
+  margin-top: 16px;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.game-card {
+  position: relative;
+  background: white;
+  border-radius: 18px;
+  padding: 20px 14px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  &.locked {
+    opacity: 0.6;
+  }
+
+  .lock-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    background: rgba(100, 116, 139, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon {
+      font-size: 14px;
+      color: #64748b;
+    }
+  }
+
+  .game-icon-small {
+    font-size: 44px;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+  }
+
+  p {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+  }
+}

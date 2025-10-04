@@ -1,10 +1,10 @@
-<ion-content [fullscreen]="true" class="home-content">
+<ion-content [fullscreen]="true" class="home-content" [scrollEvents]="true" (ionScroll)="onScroll($event)">
   <!-- Header Section with Gradient -->
-  <div class="header-gradient">
+  <div class="header-gradient" [class.scrolled]="isScrolled">
     <div class="header-content">
       <div class="greeting-section">
         <h1 class="greeting-text">Hello, Learner! 👋</h1>
-        <p class="greeting-subtext">Ready for today's challenge?</p>
+        <p class="greeting-subtext" [class.hidden]="isScrolled">Ready for today's challenge?</p>
       </div>
       <ion-button fill="clear" class="trophy-button" (click)="openAchievements()">
         <ion-icon name="trophy" slot="icon-only"></ion-icon>
@@ -12,7 +12,7 @@
     </div>
 
     <!-- Streak Card -->
-    <div class="streak-card">
+    <div class="streak-card" [class.hidden]="isScrolled">
       <div class="streak-content">
         <div class="streak-left">
           <div class="streak-label">
@@ -102,7 +102,20 @@
       <div class="categories-scroll">
         <div *ngFor="let category of puzzleCategories" class="category-card" [style.background]="category.gradient"
           (click)="startCategoryChallenge(category)">
-          <div class="category-icon">{{ category.icon }}</div>
+          <div class="category-header">
+            <div class="category-icon">{{ category.icon }}</div>
+            <div class="circular-progress">
+              <svg class="progress-ring" width="50" height="50">
+                <circle class="progress-ring-circle-bg" cx="25" cy="25" r="20" />
+                <circle class="progress-ring-circle" cx="25" cy="25" r="20"
+                  [style.stroke]="getAccuracyColor(category.accuracy)"
+                  [style.stroke-dashoffset]="getCircleOffset(category.accuracy)" />
+              </svg>
+              <span class="progress-text" [style.color]="getAccuracyColor(category.accuracy)">
+                {{ category.accuracy }}%
+              </span>
+            </div>
+          </div>
           <h4 class="category-title">{{ category.title }}</h4>
           <p class="category-description">{{ category.description }}</p>
           <div class="category-action">
@@ -113,9 +126,48 @@
       </div>
     </div>
 
+    <!-- Games Section -->
+    <div class="section-header-games">
+      <ion-icon name="game-controller"></ion-icon>
+      <div>
+        <h3>Brain Games</h3>
+        <p>Train your mind with fun challenges</p>
+      </div>
+    </div>
+
+    <div class="games-hero-card" (click)="goToGames()">
+      <div class="games-bg">
+        <div class="float-icon icon-1">🎮</div>
+        <div class="float-icon icon-2">⚡</div>
+        <div class="float-icon icon-3">🎯</div>
+        <div class="float-icon icon-4">🏆</div>
+      </div>
+      <div class="games-content">
+        <div class="games-badge">
+          <span class="badge-dot"></span>
+          New Feature
+        </div>
+        <h3>Challenge Your Brain</h3>
+        <p>Test your speed, focus & memory</p>
+        <div class="games-stats">
+          <div class="game-stat">
+            <ion-icon name="trophy"></ion-icon>
+            <span>1 Game</span>
+          </div>
+          <div class="game-stat">
+            <ion-icon name="flame"></ion-icon>
+            <span>Daily Fun</span>
+          </div>
+        </div>
+        <div class="play-btn">
+          <span>Play Now</span>
+          <ion-icon name="arrow-forward"></ion-icon>
+        </div>
+      </div>
+    </div>
+    <div class="footer-note">
+      <p>🇮🇳 Made in India with ❤️</p>
+      <p class="author">— Nikhil</p>
+    </div>
   </div>
-  <div class="footer-note">
-  <p>🇮🇳 Made in India with ❤️</p>
-  <p class="author">— Nikhil</p>
-</div>
 </ion-content>

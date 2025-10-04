@@ -1,0 +1,131 @@
+<ion-content [fullscreen]="true" class="games-content" [scrollEvents]="true" (ionScroll)="onScroll($event)">
+  
+  <!-- Header Section (scrolls away naturally) -->
+  <div class="games-header" [class.scrolled]="isScrolled">
+    <div class="header-top">
+      <ion-button fill="clear" class="back-button" (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <h1 class="page-title">Brain Games</h1>
+      
+      <!-- Compact count (shows when scrolled) -->
+      <div class="compact-count" *ngIf="isScrolled">
+        <ion-icon name="game-controller"></ion-icon>
+        <span>{{ totalGamesPlayed }}</span>
+      </div>
+    </div>
+
+    <!-- Stats pills (hide when scrolled) -->
+    <div class="stats-pills" [class.hidden]="isScrolled">
+      <div class="stat-pill">
+        <ion-icon name="game-controller"></ion-icon>
+        <span>{{ totalGamesPlayed }} Played</span>
+      </div>
+      <div class="stat-pill">
+        <ion-icon name="trophy"></ion-icon>
+        <span>1 Game</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content with rounded top -->
+  <div class="games-container">
+    
+    <!-- Featured Game -->
+    <div class="featured-section">
+      <h3 class="section-label">🎮 Featured Game</h3>
+      
+      <div class="featured-game-card" (click)="startNumberTap()">
+        <div class="featured-bg">
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+        </div>
+        
+        <div class="featured-content">
+          <div class="game-icon-large">
+            <span class="icon-emoji">🔢</span>
+          </div>
+          
+          <div class="game-info">
+            <div class="game-badge">⚡ Speed Challenge</div>
+            <h2>Number Tap</h2>
+            <p>Tap numbers 1 to N in order. Beat the clock!</p>
+            
+            <div class="difficulty-pills">
+              <span class="diff-pill easy">Easy</span>
+              <span class="diff-pill medium">Medium</span>
+              <span class="diff-pill hard">Hard</span>
+            </div>
+            
+            <div class="best-scores" *ngIf="hasBestScores()">
+              <div class="best-score-item" *ngIf="easyBest">
+                <span class="score-label">Easy:</span>
+                <span class="score-value">{{ easyBest }}s</span>
+              </div>
+              <div class="best-score-item" *ngIf="mediumBest">
+                <span class="score-label">Medium:</span>
+                <span class="score-value">{{ mediumBest }}s</span>
+              </div>
+              <div class="best-score-item" *ngIf="hardBest">
+                <span class="score-label">Hard:</span>
+                <span class="score-value">{{ hardBest }}s</span>
+              </div>
+            </div>
+            
+            <div class="play-button">
+              <div class="play-icon">
+                <ion-icon name="play"></ion-icon>
+              </div>
+              <span>Start Playing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coming Soon -->
+    <div class="coming-soon-section">
+      <h3 class="section-label">🔜 Coming Soon</h3>
+      
+      <div class="game-grid">
+        <div class="game-card locked">
+          <div class="lock-icon">
+            <ion-icon name="lock-closed"></ion-icon>
+          </div>
+          <div class="game-icon-small">🧠</div>
+          <h4>Memory Match</h4>
+          <p>Match pairs to win</p>
+        </div>
+
+        <div class="game-card locked">
+          <div class="lock-icon">
+            <ion-icon name="lock-closed"></ion-icon>
+          </div>
+          <div class="game-icon-small">➕</div>
+          <h4>Math Sprint</h4>
+          <p>Quick calculations</p>
+        </div>
+
+        <div class="game-card locked">
+          <div class="lock-icon">
+            <ion-icon name="lock-closed"></ion-icon>
+          </div>
+          <div class="game-icon-small">🔤</div>
+          <h4>Word Puzzle</h4>
+          <p>Find hidden words</p>
+        </div>
+
+        <div class="game-card locked">
+          <div class="lock-icon">
+            <ion-icon name="lock-closed"></ion-icon>
+          </div>
+          <div class="game-icon-small">🎨</div>
+          <h4>Color Match</h4>
+          <p>Match the colors</p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</ion-content>
