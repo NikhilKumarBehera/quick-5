@@ -19,13 +19,15 @@ const config: CapacitorConfig = {
       splashImmersive: true,
     },
     StatusBar: {
-      style: 'LIGHT',
+      style: 'dark',
       backgroundColor: '#9333ea',
-      overlaysWebView: false,
+      overlaysWebView: true
     },
   },
   ios: {
-    contentInset: 'always',
+    contentInset: 'never',
+    allowsLinkPreview: false,
+    scrollEnabled: false
   },
 };
 

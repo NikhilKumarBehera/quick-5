@@ -190,6 +190,7 @@ export class ChallengePage implements OnInit {
           },
         },
       ],
+      mode: 'ios',
     });
 
     await alert.present();

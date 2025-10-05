@@ -153,14 +153,29 @@ ion-content {
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* Safe area padding for notch devices */
-ion-content {
-  --padding-top: env(safe-area-inset-top);
-  --padding-bottom: env(safe-area-inset-bottom);
-}
 
 /* Disable text selection on buttons */
 ion-button {
   user-select: none;
   -webkit-user-select: none;
+}
+
+// Universal safe area fix
+.header-gradient,
+.challenge-header,
+.games-header,
+.achievements-header,
+.game-header {
+  padding-top: max(50px, calc(env(safe-area-inset-top) + 10px)) !important;
+}
+
+// For iOS devices with notch
+@supports (padding: max(0px)) {
+  .header-gradient,
+  .challenge-header,
+  .games-header,
+  .achievements-header,
+  .game-header {
+    padding-top: max(50px, calc(env(safe-area-inset-top) + 10px));
+  }
 }
