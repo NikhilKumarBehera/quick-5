@@ -38,7 +38,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   ion-icon {
     font-size: 64px;
     color: white;
@@ -153,18 +153,24 @@
 
 // Animations
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-15px);
   }
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 1;
   }
@@ -175,8 +181,183 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+// Username Modal
+.username-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.modal-content {
+  position: relative;
+  background: white;
+  border-radius: 24px;
+  padding: 32px 24px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 24px;
+
+  .welcome-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: wave 1s ease-in-out infinite;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    font-size: 15px;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+@keyframes wave {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(20deg);
+  }
+
+  75% {
+    transform: rotate(-20deg);
+  }
+}
+
+.input-container {
+  margin-bottom: 24px;
+}
+
+.username-input {
+  --background: #f8f9fc;
+  --padding-start: 20px;
+  --padding-end: 20px;
+  border-radius: 12px;
+  color: #000;
+  font-size: 24px;
+  font-weight: 600;
+  min-height: 56px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+
+  &::part(native) {
+    background: #f8f9fc;
+  }
+
+  &:focus-within {
+    border-color: #667eea;
+    --background: white;
+  }
+}
+
+.continue-button {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --background-activated: linear-gradient(135deg, #5568d3 0%, #6a4193 100%);
+  --border-radius: 12px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  height: auto;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+
+  &:disabled {
+    --background: #e2e8f0;
+    --color: #94a3b8;
+    --box-shadow: none;
+  }
+}
+
+.modal-note {
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 16px 0 0 0;
+}
+
+.welcome-back {
+  position: fixed;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 0 32px;
+  z-index: 10;
+
+  .welcome-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: wave 1s ease-in-out infinite;
+  }
+
+  .welcome-text {
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    margin: 0 0 8px 0;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .welcome-subtext {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(20deg) scale(1.1);
+  }
+  75% {
+    transform: rotate(-20deg) scale(1.1);
+  }
+}
+
+// Hide features when showing welcome back
+.features-container {
+  transition: opacity 0.3s ease;
 }

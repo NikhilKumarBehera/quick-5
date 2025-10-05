@@ -112,7 +112,7 @@ export class HomePage implements OnInit {
       accuracy: 0,
     },
   ];
-
+  username: string = 'Learner';
   constructor(
     private router: Router,
     private storageService: StorageService,
@@ -127,6 +127,12 @@ export class HomePage implements OnInit {
     this.loadOverallAccuracy();
     this.loadProgress();
     this.checkAchievements();
+
+    // Load username
+    const savedUsername = localStorage.getItem('username');
+    if (savedUsername) {
+      this.username = savedUsername;
+    }
   }
 
   // Load accuracy for all categories from localStorage

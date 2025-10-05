@@ -3,7 +3,7 @@
   <div class="header-gradient" [class.scrolled]="isScrolled">
     <div class="header-content">
       <div class="greeting-section">
-        <h1 class="greeting-text">Hello, Learner! 👋</h1>
+        <h1 class="greeting-text">Hello, {{ username }}! 👋</h1>
         <p class="greeting-subtext" [class.hidden]="isScrolled">Ready for today's challenge?</p>
       </div>
       <ion-button fill="clear" class="trophy-button" (click)="openAchievements()">
