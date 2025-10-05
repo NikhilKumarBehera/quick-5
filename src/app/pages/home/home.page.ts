@@ -165,7 +165,7 @@ export class HomePage implements OnInit {
     if (progress) {
       this.streakDays = progress.streak;
       this.totalCompleted = progress.totalCompleted;
-      this.accuracy = progress.accuracy;
+      // this.accuracy = progress.accuracy; //Already Getting accuracy from category service
       this.userLevel = progress.level;
       this.totalXP = progress.totalXP;
     }
@@ -340,5 +340,9 @@ export class HomePage implements OnInit {
 
   goToGames() {
     this.router.navigate(['/games']);
+  }
+
+  goToAccuracyStats() {
+    this.router.navigate(['/accuracy-stats']);
   }
 }

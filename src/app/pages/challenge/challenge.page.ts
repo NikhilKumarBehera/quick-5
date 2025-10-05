@@ -159,6 +159,9 @@ export class ChallengePage implements OnInit {
     // Update progress for all categories at once
     this.categoryProgressService.updateMultipleCategories(this.userResults);
 
+    // Save results for chart
+    this.saveResults();
+
     // Navigate to results with data
     this.router.navigate(['/results'], {
       state: {
@@ -171,6 +174,26 @@ export class ChallengePage implements OnInit {
         categoryName: this.categoryName,
       },
     });
+  }
+
+  // Call this when challenge completes
+  saveResults() {
+    const score = this.correctAnswers;
+    const total = this.challenges.length;
+    const accuracy = Math.round((score / total) * 100);
+
+    // Save daily accuracy
+    this.categoryProgressService.saveDailyAccuracy(accuracy);
+
+    // Save to localStorage for chart
+    this.saveToDailyChart(accuracy);
+  }
+
+  saveToDailyChart(accuracy: number) {
+    const today = new Date().toISOString().split('T')[0];
+    const dailyData = JSON.parse(localStorage.getItem('dailyAccuracy') || '{}');
+    dailyData[today] = accuracy;
+    localStorage.setItem('dailyAccuracy', JSON.stringify(dailyData));
   }
 
   async exitChallenge() {

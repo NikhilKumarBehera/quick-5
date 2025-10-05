@@ -1,0 +1,117 @@
+<ion-content [fullscreen]="true" class="accuracy-content" [scrollEvents]="true" (ionScroll)="onScroll($event)">
+
+  <!-- Header Section -->
+  <div class="accuracy-header" [class.scrolled]="isScrolled">
+    <div class="header-top">
+      <ion-button fill="clear" class="back-button" (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+      <h1 class="page-title">Accuracy</h1>
+
+      <!-- Compact accuracy - shows when scrolled -->
+      <div class="compact-count"  [class]="getAccuracyClass(overallAccuracy)" *ngIf="isScrolled">
+        <ion-icon name="trending-up"></ion-icon>
+        <span>{{ overallAccuracy }}%</span>
+      </div>
+    </div>
+
+    <!-- Overall accuracy card - hides when scrolled -->
+    <div class="stats-card" [class.hidden]="isScrolled">
+      <div class="accuracy-circle">
+        <svg viewBox="0 0 200 200" class="progress-svg">
+          <circle cx="100" cy="100" r="85" class="progress-bg"></circle>
+          <circle cx="100" cy="100" r="85" class="progress-ring" [style.stroke]="getAccuracyColor(overallAccuracy)"
+            [style.stroke-dashoffset]="getCircleOffset(overallAccuracy)">
+          </circle>
+        </svg>
+        <div class="accuracy-text">
+          <div class="accuracy-number">{{ overallAccuracy }}%</div>
+          <div class="accuracy-label">Overall</div>
+        </div>
+      </div>
+      <p class="accuracy-subtitle">{{ getAccuracyMessage(overallAccuracy) }}</p>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-wrapper">
+
+    <!-- Time Period Selector -->
+    <div class="period-selector">
+      <button *ngFor="let period of periods" class="period-btn" [class.active]="selectedPeriod === period.value"
+        (click)="selectPeriod(period.value)">
+        {{ period.label }}
+      </button>
+    </div>
+
+    <!-- Interactive Chart -->
+    <div class="chart-card">
+      <h3 class="chart-title">Accuracy Trend</h3>
+      <div class="chart-container">
+        <canvas #accuracyChart></canvas>
+      </div>
+    </div>
+
+    <!-- Category Accuracy Cards -->
+    <div class="section-header">
+      <h3>Category Performance</h3>
+      <p>Tap to view details</p>
+    </div>
+
+    <div class="category-cards">
+      <div *ngFor="let category of categoryStats" class="category-card-compact" [class.low]="category.accuracy < 40"
+        [class.medium]="category.accuracy >= 40 && category.accuracy < 70" [class.high]="category.accuracy >= 70"
+        (click)="viewCategoryDetails(category)">
+
+        <div class="card-left">
+          <div class="category-icon-small">{{ category.icon }}</div>
+          <div class="category-info">
+            <h4>{{ category.name }}</h4>
+            <div class="mini-stats">
+              <span>{{ category.correct }}/{{ category.attempted }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-right">
+          <div class="accuracy-display" [style.color]="getAccuracyColor(category.accuracy)">
+            {{ category.accuracy }}%
+          </div>
+          <div class="accuracy-bar-mini">
+            <div class="fill" [style.width.%]="category.accuracy"
+              [style.background]="getAccuracyColor(category.accuracy)">
+            </div>
+          </div>
+          <div class="badge-mini" [class]="getAccuracyClass(category.accuracy)">
+            {{ getAccuracyLevel(category.accuracy) }}
+          </div>
+        </div>
+
+        <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="quick-stats">
+      <div class="quick-stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-value">{{ totalAttempted }}</div>
+        <div class="stat-label">Total Attempts</div>
+      </div>
+
+      <div class="quick-stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">{{ totalCorrect }}</div>
+        <div class="stat-label">Correct Answers</div>
+      </div>
+
+      <div class="quick-stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-value">{{ bestStreak }}</div>
+        <div class="stat-label">Best Streak</div>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

@@ -165,7 +165,8 @@ ion-button {
 .challenge-header,
 .games-header,
 .achievements-header,
-.game-header {
+.game-header,
+.accuracy-header {
   padding-top: max(50px, calc(env(safe-area-inset-top) + 10px)) !important;
 }
 
@@ -175,7 +176,8 @@ ion-button {
   .challenge-header,
   .games-header,
   .achievements-header,
-  .game-header {
+  .game-header,
+  .accuracy-header {
     padding-top: max(50px, calc(env(safe-area-inset-top) + 10px));
   }
 }

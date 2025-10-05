@@ -10,7 +10,7 @@ export interface CategoryProgress {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryProgressService {
   private readonly STORAGE_KEY = 'puzzle_category_progress';
@@ -28,10 +28,10 @@ export class CategoryProgressService {
         { id: 'math', name: 'Math Challenges' },
         { id: 'pattern', name: 'Pattern Recognition' },
         { id: 'memory', name: 'Memory Games' },
-        { id: 'speed', name: 'Speed Rounds' }
+        { id: 'speed', name: 'Speed Rounds' },
       ];
 
-      defaultCategories.forEach(cat => {
+      defaultCategories.forEach((cat) => {
         this.initializeCategory(cat.id, cat.name);
       });
     }
@@ -45,7 +45,7 @@ export class CategoryProgressService {
       totalAttempts: 0,
       correctAnswers: 0,
       accuracy: 0,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     };
     this.saveProgress(categoryType, progress);
   }
@@ -78,7 +78,7 @@ export class CategoryProgressService {
   // Update progress when user completes a puzzle
   updateCategoryProgress(categoryType: string, isCorrect: boolean) {
     let progress = this.getCategoryProgress(categoryType);
-    
+
     if (!progress) {
       // If category doesn't exist, create it
       const categoryName = this.getCategoryNameById(categoryType);
@@ -90,21 +90,24 @@ export class CategoryProgressService {
     if (isCorrect) {
       progress.correctAnswers += 1;
     }
-    
+
     // Calculate accuracy (avoid division by zero)
-    progress.accuracy = progress.totalAttempts > 0 
-      ? Math.round((progress.correctAnswers / progress.totalAttempts) * 100)
-      : 0;
-    
+    progress.accuracy =
+      progress.totalAttempts > 0
+        ? Math.round((progress.correctAnswers / progress.totalAttempts) * 100)
+        : 0;
+
     progress.lastUpdated = new Date().toISOString();
-    
+
     this.saveProgress(categoryType, progress);
     return progress;
   }
 
   // Batch update - useful when completing multiple puzzles
-  updateMultipleCategories(results: { categoryType: string, isCorrect: boolean }[]) {
-    results.forEach(result => {
+  updateMultipleCategories(
+    results: { categoryType: string; isCorrect: boolean }[]
+  ) {
+    results.forEach((result) => {
       this.updateCategoryProgress(result.categoryType, result.isCorrect);
     });
   }
@@ -112,11 +115,11 @@ export class CategoryProgressService {
   // Get category name by ID (you can expand this based on your categories)
   private getCategoryNameById(categoryType: string): string {
     const categoryMap: { [key: string]: string } = {
-      'Logic': 'Logic Puzzles',
-      'Math': 'Math Challenges',
-      'Pattern': 'Pattern Recognition',
-      'Memory': 'Memory Games',
-      'Riddle': 'Brain Riddles'
+      Logic: 'Logic Puzzles',
+      Math: 'Math Challenges',
+      Pattern: 'Pattern Recognition',
+      Memory: 'Memory Games',
+      Riddle: 'Brain Riddles',
     };
     return categoryMap[categoryType] || 'Unknown Category';
   }
@@ -143,38 +146,54 @@ export class CategoryProgressService {
   getOverallAccuracy(): number {
     const allProgress = this.getAllProgress();
     const categories = Object.values(allProgress);
-    
+
     if (categories.length === 0) return 0;
-    
-    const totalAttempts = categories.reduce((sum, cat) => sum + cat.totalAttempts, 0);
-    const totalCorrect = categories.reduce((sum, cat) => sum + cat.correctAnswers, 0);
-    
-    return totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
+
+    const totalAttempts = categories.reduce(
+      (sum, cat) => sum + cat.totalAttempts,
+      0
+    );
+    const totalCorrect = categories.reduce(
+      (sum, cat) => sum + cat.correctAnswers,
+      0
+    );
+
+    return totalAttempts > 0
+      ? Math.round((totalCorrect / totalAttempts) * 100)
+      : 0;
   }
 
   // Get statistics for dashboard
   getStatistics() {
     const allProgress = this.getAllProgress();
     const categories = Object.values(allProgress);
-    
+
     return {
-      totalAttempts: categories.reduce((sum, cat) => sum + cat.totalAttempts, 0),
-      totalCorrect: categories.reduce((sum, cat) => sum + cat.correctAnswers, 0),
+      totalAttempts: categories.reduce(
+        (sum, cat) => sum + cat.totalAttempts,
+        0
+      ),
+      totalCorrect: categories.reduce(
+        (sum, cat) => sum + cat.correctAnswers,
+        0
+      ),
       overallAccuracy: this.getOverallAccuracy(),
       categoriesCount: categories.length,
       bestCategory: this.getBestCategory(),
-      worstCategory: this.getWorstCategory()
+      worstCategory: this.getWorstCategory(),
     };
   }
 
   // Get best performing category
   getBestCategory(): CategoryProgress | null {
     const allProgress = this.getAllProgress();
-    const categories = Object.values(allProgress).filter(cat => cat.totalAttempts > 0);
-    
+    const categories = Object.values(allProgress).filter(
+      (cat) => cat.totalAttempts > 0
+    );
+
     if (categories.length === 0) return null;
-    
-    return categories.reduce((best, current) => 
+
+    return categories.reduce((best, current) =>
       current.accuracy > best.accuracy ? current : best
     );
   }
@@ -182,11 +201,13 @@ export class CategoryProgressService {
   // Get worst performing category
   getWorstCategory(): CategoryProgress | null {
     const allProgress = this.getAllProgress();
-    const categories = Object.values(allProgress).filter(cat => cat.totalAttempts > 0);
-    
+    const categories = Object.values(allProgress).filter(
+      (cat) => cat.totalAttempts > 0
+    );
+
     if (categories.length === 0) return null;
-    
-    return categories.reduce((worst, current) => 
+
+    return categories.reduce((worst, current) =>
       current.accuracy < worst.accuracy ? current : worst
     );
   }
@@ -206,5 +227,26 @@ export class CategoryProgressService {
       console.error('Failed to import progress:', error);
       return false;
     }
+  }
+
+  saveDailyAccuracy(accuracy: number) {
+    const today = new Date().toISOString().split('T')[0];
+    const dailyData = JSON.parse(localStorage.getItem('dailyAccuracy') || '{}');
+    dailyData[today] = accuracy;
+    localStorage.setItem('dailyAccuracy', JSON.stringify(dailyData));
+  }
+
+  getDailyAccuracy(days: number = 7): number[] {
+    const dailyData = JSON.parse(localStorage.getItem('dailyAccuracy') || '{}');
+    const result: number[] = [];
+
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      result.push(dailyData[dateStr] || 0);
+    }
+
+    return result;
   }
 }
