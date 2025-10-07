@@ -142,7 +142,7 @@ ion-button ion-icon {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  flex: 1;
+  margin-bottom: 16px;
 }
 
 .option-button {
@@ -173,7 +173,30 @@ ion-button ion-icon {
     box-shadow: 0 8px 24px rgba(147, 51, 234, 0.3);
   }
 
-  &:not(.selected) {
+  // Correct answer styling
+  &.correct-answer {
+    --background: #10b981;
+    --color: white;
+    // border: 2px solid #10b981;
+    animation: pulseCorrect 0.6s ease-in-out;
+  }
+
+  // Wrong answer styling
+  &.wrong-answer {
+    --background: #ef4444;
+    --color: white;
+    // border: 2px solid #ef4444;
+    animation: shake 0.5s ease-in-out;
+  }
+
+  // Disabled options (other options after answering)
+  &.disabled-option {
+    --background: #f3f4f6;
+    --color: #9ca3af;
+    opacity: 0.6;
+  }
+
+  &:not(.selected):not(.correct-answer):not(.wrong-answer):not(.disabled-option) {
     --color: #374151;
     border: 2px solid #f3f4f6;
 
@@ -199,6 +222,115 @@ ion-button ion-icon {
   padding: 2px;
 }
 
+.result-icon {
+  font-size: 28px;
+  margin-left: 8px;
+
+  &.correct {
+    color: white;
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  &.wrong {
+    color: white;
+    animation: scaleIn 0.3s ease-out;
+  }
+}
+
+// Explanation Card
+.explanation-card {
+  margin: 0 0 16px 0;
+  border-radius: 20px;
+  overflow: hidden;
+  animation: slideUp 0.4s ease-out;
+
+  &.correct-explanation {
+    border-left: 5px solid #10b981;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  }
+
+  &.wrong-explanation {
+    border-left: 5px solid #ef4444;
+    background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+  }
+
+  ion-card-content {
+    padding: 20px;
+  }
+}
+
+.explanation-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.explanation-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.explanation-icon {
+  font-size: 36px;
+
+  &.correct-icon {
+    color: #10b981;
+  }
+
+  &.wrong-icon {
+    color: #ef4444;
+  }
+}
+
+.explanation-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+
+  &.correct-title {
+    color: #059669;
+  }
+
+  &.wrong-title {
+    color: #dc2626;
+  }
+}
+
+.explanation-body {
+  padding-left: 48px;
+}
+
+.explanation-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.explanation-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #374151;
+  margin: 0;
+}
+
+.auto-navigate-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
+  margin: 8px 0 0 48px;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
 // Footer
 .footer-toolbar {
   --background: transparent;
@@ -222,13 +354,6 @@ ion-button ion-icon {
   margin: 0;
   transition: all 0.3s ease;
 
-  &:disabled {
-    --background: #e5e7eb;
-    --color: #9ca3af;
-    --box-shadow: none;
-    opacity: 1;
-  }
-
   &:not(:disabled):hover {
     transform: translateY(-2px);
     --box-shadow: 0 12px 32px rgba(16, 185, 129, 0.4);
@@ -241,9 +366,71 @@ ion-button ion-icon {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-8px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+@keyframes pulseCorrect {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -253,7 +440,7 @@ ion-button ion-icon {
 
 .option-button {
   animation: fadeInUp 0.5s ease-out;
-  
+
   @for $i from 1 through 4 {
     &:nth-child(#{$i}) {
       animation-delay: #{$i * 0.1}s;

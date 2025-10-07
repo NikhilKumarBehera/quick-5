@@ -5,22 +5,20 @@
         <ion-icon name="close" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    
+
     <ion-title class="challenge-counter">
       <span *ngIf="mode === 'category'" class="category-icon-header">{{ getHeaderIcon() }}</span>
       Challenge {{ currentIndex + 1 }} of {{ challenges.length }}
     </ion-title>
-    
+
     <ion-buttons slot="end">
       <div class="timer-placeholder"></div>
     </ion-buttons>
   </ion-toolbar>
-  
+
   <!-- Progress Bars -->
   <div class="progress-container">
-    <div 
-      *ngFor="let challenge of challenges; let i = index" 
-      class="mini-progress-bar"
+    <div *ngFor="let challenge of challenges; let i = index" class="mini-progress-bar"
       [ngClass]="getProgressBarClass(i)">
     </div>
   </div>
@@ -34,9 +32,7 @@
       <div class="challenge-type-info">
         <div class="challenge-type-label">{{ currentChallenge.type }} Challenge</div>
         <div class="challenge-difficulty">
-          <span 
-            class="difficulty-badge" 
-            [style.background-color]="getDifficultyColor(currentChallenge.difficulty)">
+          <span class="difficulty-badge" [style.background-color]="getDifficultyColor(currentChallenge.difficulty)">
             <span class="difficulty-icon">{{ getDifficultyIcon(currentChallenge.difficulty) }}</span>
             <span class="difficulty-text">{{ getDifficultyLabel(currentChallenge.difficulty) }}</span>
           </span>
@@ -53,32 +49,61 @@
 
     <!-- Answer Options -->
     <div class="options-container">
-      <ion-button
-        *ngFor="let option of currentChallenge.options; let i = index"
-        expand="block"
-        [class.selected]="selectedAnswer === i"
-        class="option-button"
+      <ion-button *ngFor="let option of currentChallenge.options; let i = index" expand="block"
+        [class.selected]="selectedAnswer === i && !hasAnswered" [class.correct-answer]="isOptionCorrect(i)"
+        [class.wrong-answer]="isOptionWrong(i)" [class.disabled-option]="isOptionDisabled(i)" class="option-button"
         (click)="selectAnswer(i)">
         <span class="option-text">{{ option }}</span>
-        <ion-icon 
-          *ngIf="selectedAnswer === i" 
-          name="checkmark-circle" 
-          slot="end"
-          class="check-icon">
+
+        <!-- Show checkmark for selected (before answer) -->
+        <ion-icon *ngIf="selectedAnswer === i && !hasAnswered" name="checkmark-circle" slot="end" class="check-icon">
+        </ion-icon>
+
+        <!-- Show checkmark for correct answer (after answer) -->
+        <ion-icon *ngIf="isOptionCorrect(i)" name="checkmark-circle" slot="end" class="result-icon correct">
+        </ion-icon>
+
+        <!-- Show X for wrong answer (after answer) -->
+        <ion-icon *ngIf="isOptionWrong(i)" name="close-circle" slot="end" class="result-icon wrong">
         </ion-icon>
       </ion-button>
     </div>
+
+    <!-- Explanation Card (shown after answering) -->
+    <ion-card *ngIf="showExplanationCard" class="explanation-card" [class.correct-explanation]="isCorrectAnswer"
+      [class.wrong-explanation]="!isCorrectAnswer">
+      <ion-card-content>
+        <div class="explanation-content">
+          <div class="explanation-header">
+            <ion-icon [name]="isCorrectAnswer ? 'checkmark-circle' : 'close-circle'"
+              [class.correct-icon]="isCorrectAnswer" [class.wrong-icon]="!isCorrectAnswer" class="explanation-icon">
+            </ion-icon>
+            <h3 class="explanation-title" [class.correct-title]="isCorrectAnswer"
+              [class.wrong-title]="!isCorrectAnswer">
+              {{ isCorrectAnswer ? 'Correct!' : 'Incorrect' }}
+            </h3>
+          </div>
+
+          <div class="explanation-body">
+            <p class="explanation-label">Explanation:</p>
+            <p class="explanation-text">{{ currentChallenge.explanation }}</p>
+          </div>
+
+          <p class="auto-navigate-text">
+            <ion-icon name="time-outline"></ion-icon>
+            Moving to next question in {{ countdownSeconds }} second{{ countdownSeconds !== 1 ? 's' : '' }}...
+          </p>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
 
-<ion-footer class="ion-no-border">
+<!-- <ion-footer class="ion-no-border">
   <ion-toolbar class="footer-toolbar">
-    <ion-button
-      expand="block"
-      [disabled]="selectedAnswer === null"
-      class="next-button"
-      (click)="nextChallenge()">
-      {{ currentIndex < challenges.length - 1 ? 'Next Challenge' : 'Finish' }}
+    <ion-button expand="block" class="next-button" (click)="nextChallenge()">
+      {{ currentIndex < challenges.length - 1 ? 'Next Challenge' : 'Finish' }} <ion-icon name="arrow-forward"
+        slot="end"></ion-icon>
     </ion-button>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->

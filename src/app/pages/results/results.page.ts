@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Puzzle } from 'src/app/services/puzzle-service/puzzle-service';
+import { SoundService } from 'src/app/services/sound-service/sound-service';
 import { StorageService } from 'src/app/services/storage-service/storage-service';
 
 @Component({
@@ -22,7 +23,8 @@ export class ResultsPage implements OnInit {
 
   constructor(
     private router: Router,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private soundService: SoundService
   ) {
     // Get results from navigation state
     const navigation = this.router.getCurrentNavigation();
@@ -36,7 +38,8 @@ export class ResultsPage implements OnInit {
     }
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.soundService.playChallengeCompleteSound();
     this.loadResults();
     this.calculateAccuracy();
   }
@@ -49,7 +52,6 @@ export class ResultsPage implements OnInit {
       this.totalXP = progress.totalXP;
       this.userLevel = progress.level;
     }
-
     console.log('User progress after completion:', progress);
   }
 

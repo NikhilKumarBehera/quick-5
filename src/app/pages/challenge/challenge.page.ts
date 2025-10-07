@@ -6,6 +6,7 @@ import {
   Puzzle,
   PuzzleService,
 } from 'src/app/services/puzzle-service/puzzle-service';
+import { SoundService } from 'src/app/services/sound-service/sound-service';
 import { StorageService } from 'src/app/services/storage-service/storage-service';
 
 @Component({
@@ -26,12 +27,21 @@ export class ChallengePage implements OnInit {
   categoryIcon: string = '';
   userResults: { categoryType: string; isCorrect: boolean }[] = [];
 
+  // New properties for enhanced UI
+  hasAnswered: boolean = false;
+  isCorrectAnswer: boolean = false;
+  showExplanationCard: boolean = false;
+  autoNavigateTimeout: any = null;
+  countdownSeconds: number = 3;
+  countdownInterval: any = null;
+
   constructor(
     private router: Router,
     private alertController: AlertController,
     private puzzleService: PuzzleService,
     private storageService: StorageService,
-    private categoryProgressService: CategoryProgressService
+    private categoryProgressService: CategoryProgressService,
+    private soundService: SoundService
   ) {
     // Get puzzles from navigation state or load new ones
     const navigation = this.router.getCurrentNavigation();
@@ -53,6 +63,17 @@ export class ChallengePage implements OnInit {
     }
 
     console.log('Loaded challenges:', this.challenges);
+  }
+
+  ngOnDestroy() {
+    // Clear timeout if component is destroyed
+    if (this.autoNavigateTimeout) {
+      clearTimeout(this.autoNavigateTimeout);
+    }
+    // Clear countdown interval
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
   }
 
   get currentChallenge(): Puzzle {
@@ -93,37 +114,102 @@ export class ChallengePage implements OnInit {
     return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
   }
 
-  selectAnswer(index: number) {
-    this.selectedAnswer = index;
-  }
+  async selectAnswer(index: number) {
+    if (this.hasAnswered) return; // Prevent multiple selections
 
-  async nextChallenge() {
-    if (this.selectedAnswer === null) return;
+    this.selectedAnswer = index;
+    this.hasAnswered = true;
+
+    // Check if answer is correct
+    const isCorrect = index === this.currentChallenge.correctAnswer;
+    this.isCorrectAnswer = isCorrect;
 
     // Record answer
-    this.userAnswers.push(this.selectedAnswer);
+    this.userAnswers.push(index);
 
     // Store result
     this.userResults.push({
       categoryType: this.currentChallenge.type,
-      isCorrect: this.selectedAnswer === this.currentChallenge.correctAnswer,
+      isCorrect: isCorrect,
     });
 
-    // Check if correct
-    if (this.selectedAnswer === this.currentChallenge.correctAnswer) {
+    // Update score
+    if (isCorrect) {
       this.correctAnswers++;
       console.log('✅ Correct answer!');
+      // Play success sound and haptic
+      await this.soundService.playSuccess();
     } else {
       console.log(
         '❌ Wrong answer. Correct was:',
         this.currentChallenge.correctAnswer
       );
+      // Play error sound and haptic
+      await this.soundService.playError();
+    }
+
+    // Show explanation after a brief delay
+    setTimeout(() => {
+      this.showExplanationCard = true;
+      // Start countdown
+      this.startCountdown();
+    }, 300);
+
+    // Auto-navigate after 3 seconds
+    this.autoNavigateTimeout = setTimeout(() => {
+      this.nextChallenge();
+    }, 3000);
+  }
+
+  startCountdown() {
+    this.countdownSeconds = 3;
+    this.countdownInterval = setInterval(() => {
+      this.countdownSeconds--;
+      if (this.countdownSeconds <= 0) {
+        clearInterval(this.countdownInterval);
+      }
+    }, 1000);
+  }
+
+  isOptionCorrect(index: number): boolean {
+    return this.hasAnswered && index === this.currentChallenge.correctAnswer;
+  }
+
+  isOptionWrong(index: number): boolean {
+    return (
+      this.hasAnswered && index === this.selectedAnswer && !this.isCorrectAnswer
+    );
+  }
+
+  isOptionDisabled(index: number): boolean {
+    return (
+      this.hasAnswered &&
+      index !== this.currentChallenge.correctAnswer &&
+      index !== this.selectedAnswer
+    );
+  }
+
+  async nextChallenge() {
+    // Clear auto-navigate timeout
+    if (this.autoNavigateTimeout) {
+      clearTimeout(this.autoNavigateTimeout);
+      this.autoNavigateTimeout = null;
+    }
+
+    // Clear countdown interval
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+      this.countdownInterval = null;
     }
 
     // Move to next or finish
     if (this.currentIndex < this.challenges.length - 1) {
       this.currentIndex++;
       this.selectedAnswer = null;
+      this.hasAnswered = false;
+      this.isCorrectAnswer = false;
+      this.showExplanationCard = false;
+      this.countdownSeconds = 3;
     } else {
       await this.finishChallenges();
     }
@@ -223,13 +309,6 @@ export class ChallengePage implements OnInit {
     if (index < this.currentIndex) return 'completed';
     if (index === this.currentIndex) return 'active';
     return 'pending';
-  }
-
-  // Show explanation after answering (optional feature)
-  showExplanation() {
-    if (this.currentChallenge.explanation) {
-      alert(this.currentChallenge.explanation);
-    }
   }
 
   getHeaderTitle(): string {
