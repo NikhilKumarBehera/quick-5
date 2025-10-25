@@ -3,6 +3,18 @@ import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { GameStorageService } from 'src/app/services/game-storage-service/game-storage-service';
 
+interface Game {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+  badge?: string;
+  color: string;
+  route: string;
+  difficulties?: string[];
+  isLocked?: boolean;
+}
+
 @Component({
   selector: 'app-games',
   templateUrl: './games.page.html',
@@ -13,10 +25,79 @@ export class GamesPage implements OnInit {
   isScrolled = false;
   private scrollThreshold = 180;
   totalGamesPlayed = 0;
-  
-  easyBest: string | null = null;
-  mediumBest: string | null = null;
-  hardBest: string | null = null;
+
+  // Featured Game
+  featuredGame: Game = {
+    id: 'number-tap',
+    name: 'Number Tap',
+    icon: '🔢',
+    description: 'Tap numbers 1 to N in order. Beat the clock!',
+    badge: '⚡ Speed Challenge',
+    color: '#8b5cf6',
+    route: '/games/number-tap',
+    difficulties: ['easy', 'medium', 'hard']
+  };
+
+  // Playable Games
+  playableGames: Game[] = [
+    {
+      id: 'hangman',
+      name: 'Hangman',
+      icon: '🎯',
+      description: 'Guess the word letter by letter',
+      badge: '🧠 Word Game',
+      color: '#8b5cf6',
+      route: '/games/hangman',
+      isLocked: false
+    }
+  ];
+
+  // Upcoming Games
+  upcomingGames: Game[] = [
+    {
+      id: 'memory-match',
+      name: 'Memory Match',
+      icon: '🧠',
+      description: 'Match pairs to win',
+      color: '#3b82f6',
+      route: '',
+      isLocked: true
+    },
+    {
+      id: 'math-sprint',
+      name: 'Math Sprint',
+      icon: '➕',
+      description: 'Quick calculations',
+      color: '#10b981',
+      route: '',
+      isLocked: true
+    },
+    {
+      id: 'word-puzzle',
+      name: 'Word Puzzle',
+      icon: '🔤',
+      description: 'Find hidden words',
+      color: '#f59e0b',
+      route: '',
+      isLocked: true
+    },
+    {
+      id: 'color-match',
+      name: 'Color Match',
+      icon: '🎨',
+      description: 'Match the colors',
+      color: '#ec4899',
+      route: '',
+      isLocked: true
+    }
+  ];
+
+  // Best scores for featured game
+  bestScores: { [key: string]: string | null } = {
+    easy: null,
+    medium: null,
+    hard: null
+  };
 
   constructor(
     private router: Router,
@@ -33,18 +114,25 @@ export class GamesPage implements OnInit {
 
   loadStats() {
     this.totalGamesPlayed = this.gameStorage.getTotalGamesPlayed();
-    
-    const easyTime = this.gameStorage.getBestTime('easy');
-    const mediumTime = this.gameStorage.getBestTime('medium');
-    const hardTime = this.gameStorage.getBestTime('hard');
-    
-    this.easyBest = easyTime ? easyTime.toFixed(2) : null;
-    this.mediumBest = mediumTime ? mediumTime.toFixed(2) : null;
-    this.hardBest = hardTime ? hardTime.toFixed(2) : null;
+    this.loadBestScores();
+  }
+
+  loadBestScores() {
+    if (this.featuredGame.difficulties) {
+      this.featuredGame.difficulties.forEach((difficulty) => {
+        const typedDifficulty = difficulty as 'easy' | 'medium' | 'hard';
+        const time = this.gameStorage.getBestTime(typedDifficulty);
+        this.bestScores[difficulty] = time ? time.toFixed(2) : null;
+      });
+    }
   }
 
   hasBestScores(): boolean {
-    return this.easyBest !== null || this.mediumBest !== null || this.hardBest !== null;
+    return Object.values(this.bestScores).some(score => score !== null);
+  }
+
+  getBestScoreLabel(difficulty: string): string {
+    return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
   }
 
   onScroll(event: any) {
@@ -58,8 +146,16 @@ export class GamesPage implements OnInit {
     }
   }
 
-  startNumberTap() {
-    this.router.navigate(['/games/number-tap']);
+  startFeaturedGame() {
+    if (this.featuredGame.route) {
+      this.router.navigate([this.featuredGame.route]);
+    }
+  }
+
+  startGame(game: Game) {
+    if (!game.isLocked && game.route) {
+      this.router.navigate([game.route]);
+    }
   }
 
   goBack() {

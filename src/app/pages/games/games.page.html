@@ -23,7 +23,7 @@
       </div>
       <div class="stat-pill">
         <ion-icon name="trophy"></ion-icon>
-        <span>1 Game</span>
+        <span>{{ playableGames.length + 1 }} Games</span>
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@
     <div class="featured-section">
       <h3 class="section-label">🎮 Featured Game</h3>
       
-      <div class="featured-game-card" (click)="startNumberTap()">
+      <div class="featured-game-card" (click)="startFeaturedGame()">
         <div class="featured-bg">
           <div class="particle"></div>
           <div class="particle"></div>
@@ -44,32 +44,32 @@
         
         <div class="featured-content">
           <div class="game-icon-large">
-            <span class="icon-emoji">🔢</span>
+            <span class="icon-emoji">{{ featuredGame.icon }}</span>
           </div>
           
           <div class="game-info">
-            <div class="game-badge">⚡ Speed Challenge</div>
-            <h2>Number Tap</h2>
-            <p>Tap numbers 1 to N in order. Beat the clock!</p>
+            <div class="game-badge" *ngIf="featuredGame.badge">{{ featuredGame.badge }}</div>
+            <h2>{{ featuredGame.name }}</h2>
+            <p>{{ featuredGame.description }}</p>
             
-            <div class="difficulty-pills">
-              <span class="diff-pill easy">Easy</span>
-              <span class="diff-pill medium">Medium</span>
-              <span class="diff-pill hard">Hard</span>
+            <div class="difficulty-pills" *ngIf="featuredGame.difficulties">
+              <span 
+                *ngFor="let diff of featuredGame.difficulties" 
+                class="diff-pill"
+                [class.easy]="diff === 'easy'"
+                [class.medium]="diff === 'medium'"
+                [class.hard]="diff === 'hard'">
+                {{ getBestScoreLabel(diff) }}
+              </span>
             </div>
             
             <div class="best-scores" *ngIf="hasBestScores()">
-              <div class="best-score-item" *ngIf="easyBest">
-                <span class="score-label">Easy:</span>
-                <span class="score-value">{{ easyBest }}s</span>
-              </div>
-              <div class="best-score-item" *ngIf="mediumBest">
-                <span class="score-label">Medium:</span>
-                <span class="score-value">{{ mediumBest }}s</span>
-              </div>
-              <div class="best-score-item" *ngIf="hardBest">
-                <span class="score-label">Hard:</span>
-                <span class="score-value">{{ hardBest }}s</span>
+              <div 
+                class="best-score-item" 
+                *ngFor="let diff of featuredGame.difficulties"
+                [hidden]="!bestScores[diff]">
+                <span class="score-label">{{ getBestScoreLabel(diff) }}:</span>
+                <span class="score-value">{{ bestScores[diff] }}s</span>
               </div>
             </div>
             
@@ -84,45 +84,47 @@
       </div>
     </div>
 
+    <!-- Playable Games Section -->
+    <div class="playable-section" *ngIf="playableGames.length > 0">
+      <h3 class="section-label">🎯 More Games</h3>
+      
+      <div class="game-grid">
+        <div 
+          *ngFor="let game of playableGames"
+          class="game-card playable"
+          [style.border-color]="game.color"
+          (click)="startGame(game)">
+          
+          <div class="game-card-header">
+            <div class="game-icon-small">{{ game.icon }}</div>
+            <div class="game-badge-small" *ngIf="game.badge">{{ game.badge }}</div>
+          </div>
+          
+          <h4>{{ game.name }}</h4>
+          <p>{{ game.description }}</p>
+          
+          <div class="play-overlay" [style.background]="game.color">
+            <ion-icon name="play-circle"></ion-icon>
+            <span>Play Now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Coming Soon -->
-    <div class="coming-soon-section">
+    <div class="coming-soon-section" *ngIf="upcomingGames.length > 0">
       <h3 class="section-label">🔜 Coming Soon</h3>
       
       <div class="game-grid">
-        <div class="game-card locked">
+        <div 
+          *ngFor="let game of upcomingGames"
+          class="game-card locked">
           <div class="lock-icon">
             <ion-icon name="lock-closed"></ion-icon>
           </div>
-          <div class="game-icon-small">🧠</div>
-          <h4>Memory Match</h4>
-          <p>Match pairs to win</p>
-        </div>
-
-        <div class="game-card locked">
-          <div class="lock-icon">
-            <ion-icon name="lock-closed"></ion-icon>
-          </div>
-          <div class="game-icon-small">➕</div>
-          <h4>Math Sprint</h4>
-          <p>Quick calculations</p>
-        </div>
-
-        <div class="game-card locked">
-          <div class="lock-icon">
-            <ion-icon name="lock-closed"></ion-icon>
-          </div>
-          <div class="game-icon-small">🔤</div>
-          <h4>Word Puzzle</h4>
-          <p>Find hidden words</p>
-        </div>
-
-        <div class="game-card locked">
-          <div class="lock-icon">
-            <ion-icon name="lock-closed"></ion-icon>
-          </div>
-          <div class="game-icon-small">🎨</div>
-          <h4>Color Match</h4>
-          <p>Match the colors</p>
+          <div class="game-icon-small">{{ game.icon }}</div>
+          <h4>{{ game.name }}</h4>
+          <p>{{ game.description }}</p>
         </div>
       </div>
     </div>

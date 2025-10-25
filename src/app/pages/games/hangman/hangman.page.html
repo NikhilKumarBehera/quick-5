@@ -1,0 +1,244 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="hangman-toolbar" [class.scrolled]="isScrolled">
+    <ion-buttons slot="start">
+      <ion-button class="back-button" (click)="goBack()" fill="clear">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+    <ion-title class="hangman-title">
+      <span class="title-icon">🎯</span>
+      <span class="title-text">Hangman</span>
+    </ion-title>
+    
+    <ion-buttons slot="end">
+      <div class="score-badge-header">
+        <ion-icon name="star"></ion-icon>
+        <span>{{ score }}</span>
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Compact Stats Bar (shows when scrolled) -->
+  <!-- <div class="compact-stats" [class.visible]="isScrolled">
+    <div class="compact-stat">
+      <ion-icon name="heart"></ion-icon>
+      <span>{{ maxWrongGuesses - wrongGuesses }}</span>
+    </div>
+    <div class="compact-stat category">
+      <span>{{ currentWord.category }}</span>
+    </div>
+    <div class="compact-stat">
+      <ion-icon name="trophy"></ion-icon>
+      <span>{{ totalGames }}</span>
+    </div>
+  </div> -->
+</ion-header>
+
+<ion-content [fullscreen]="true" class="hangman-content" [scrollEvents]="true" (ionScroll)="onScroll($event)">
+  <div class="hangman-wrapper">
+    
+    <!-- Stats Row (hides when scrolled) -->
+    <div class="stats-row" [class.hidden]="isScrolled">
+      <div class="stat-item">
+        <ion-icon name="heart" class="stat-icon"></ion-icon>
+        <span>Lives: {{ maxWrongGuesses - wrongGuesses }}</span>
+      </div>
+      <div class="stat-item category-badge">
+        <ion-icon name="bookmark" class="stat-icon"></ion-icon>
+        <span>{{ currentWord.category }}</span>
+      </div>
+      <div class="stat-item">
+        <ion-icon name="trophy" class="stat-icon"></ion-icon>
+        <span>Games: {{ totalGames }}</span>
+      </div>
+    </div>
+
+    <!-- Main Game Container (fits in viewport) -->
+    <div class="game-container">
+      
+      <!-- 3D Hangman Character -->
+      <div class="hangman-3d-container">
+        <div class="hangman-character" 
+             [class.celebrate]="showCelebration"
+             [class.fall]="showFall">
+          
+          <!-- Gallows -->
+          <div class="gallows">
+            <div class="gallows-base"></div>
+            <div class="gallows-pole"></div>
+            <div class="gallows-top"></div>
+            <div class="gallows-rope"></div>
+          </div>
+          
+          <!-- 3D Character -->
+          <div class="character-3d" [attr.data-parts]="wrongGuesses">
+            <!-- Head -->
+            <div class="head" *ngIf="wrongGuesses >= 1">
+              <div class="face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth" [class.sad]="wrongGuesses >= 6"></div>
+              </div>
+            </div>
+            
+            <!-- Body -->
+            <div class="body" *ngIf="wrongGuesses >= 2"></div>
+            
+            <!-- Arms -->
+            <div class="arm left" *ngIf="wrongGuesses >= 3"></div>
+            <div class="arm right" *ngIf="wrongGuesses >= 4"></div>
+            
+            <!-- Legs -->
+            <div class="leg left" *ngIf="wrongGuesses >= 5"></div>
+            <div class="leg right" *ngIf="wrongGuesses >= 6"></div>
+          </div>
+        </div>
+
+        <!-- Wrong Counter -->
+        <div class="wrong-counter">
+          <ion-icon name="close-circle"></ion-icon>
+          {{ wrongGuesses }} / {{ maxWrongGuesses }}
+        </div>
+      </div>
+
+      <!-- Word Display -->
+      <div class="word-display-container">
+        <div class="word-display">
+          <div 
+            *ngFor="let letter of displayWord; let i = index" 
+            class="letter-box"
+            [class.revealed]="letter !== '_'">
+            <span class="letter">{{ letter }}</span>
+          </div>
+        </div>
+
+        <!-- Hint Button -->
+        <ion-button 
+          fill="outline" 
+          size="small" 
+          class="hint-button"
+          (click)="toggleHint()"
+          [disabled]="gameStatus !== 'playing'">
+          <ion-icon name="bulb" slot="start"></ion-icon>
+          {{ showHint ? 'Hide' : 'Hint' }}
+        </ion-button>
+      </div>
+
+      <!-- Hint Text -->
+      <div class="hint-text" *ngIf="showHint">
+        <ion-icon name="bulb"></ion-icon>
+        {{ currentWord.hint }}
+      </div>
+
+      <!-- QWERTY Keyboard -->
+      <div class="keyboard-qwerty">
+        <!-- Row 1: QWERTYUIOP -->
+        <div class="keyboard-row">
+          <ion-button
+            *ngFor="let letter of qwertyRow1"
+            class="key-btn"
+            [class.key-correct]="isLetterCorrect(letter)"
+            [class.key-wrong]="isLetterWrong(letter)"
+            [disabled]="isLetterGuessed(letter) || gameStatus !== 'playing'"
+            (click)="guessLetter(letter)">
+            {{ letter }}
+          </ion-button>
+        </div>
+        
+        <!-- Row 2: ASDFGHJKL -->
+        <div class="keyboard-row">
+          <ion-button
+            *ngFor="let letter of qwertyRow2"
+            class="key-btn"
+            [class.key-correct]="isLetterCorrect(letter)"
+            [class.key-wrong]="isLetterWrong(letter)"
+            [disabled]="isLetterGuessed(letter) || gameStatus !== 'playing'"
+            (click)="guessLetter(letter)">
+            {{ letter }}
+          </ion-button>
+        </div>
+        
+        <!-- Row 3: ZXCVBNM -->
+        <div class="keyboard-row">
+          <ion-button
+            *ngFor="let letter of qwertyRow3"
+            class="key-btn"
+            [class.key-correct]="isLetterCorrect(letter)"
+            [class.key-wrong]="isLetterWrong(letter)"
+            [disabled]="isLetterGuessed(letter) || gameStatus !== 'playing'"
+            (click)="guessLetter(letter)">
+            {{ letter }}
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Celebration/Fail Animation Overlay -->
+  <div class="animation-overlay" *ngIf="showCelebration || showFall">
+    <!-- Confetti for win -->
+    <div class="confetti-container" *ngIf="showCelebration">
+      <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"></div>
+    </div>
+    
+    <!-- Dark clouds for loss -->
+    <div class="fail-container" *ngIf="showFall">
+      <div class="rain-drop" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"></div>
+    </div>
+    
+    <!-- Character Animation -->
+    <div class="character-animation">
+      <div class="character-large" [class.celebrating]="showCelebration" [class.falling]="showFall">
+        <div class="character-emoji">
+          {{ showCelebration ? '🎉' : '😢' }}
+        </div>
+        <div class="character-text">
+          {{ showCelebration ? 'SAVED!' : 'GAME OVER!' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div *ngIf="showGameOverModal" class="game-over-overlay">
+    <ion-card class="result-card" [class.win-card]="gameStatus === 'won'" [class.lose-card]="gameStatus === 'lost'">
+      <ion-card-content>
+        <div class="result-icon">
+          {{ gameStatus === 'won' ? '🏆' : '💔' }}
+        </div>
+        
+        <h2 class="result-title">
+          {{ gameStatus === 'won' ? 'Victory!' : 'Better Luck!' }}
+        </h2>
+        
+        <div class="result-word">
+          The word was: <strong>{{ currentWord.word }}</strong>
+        </div>
+        
+        <div class="result-stats">
+          <div class="result-stat">
+            <span class="result-label">Score Earned:</span>
+            <span class="result-value" *ngIf="gameStatus === 'won'">
+              +{{ 100 - (wrongGuesses * 10) - (hintsUsed * 20) }}
+            </span>
+            <span class="result-value" *ngIf="gameStatus === 'lost'">0</span>
+          </div>
+          <div class="result-stat">
+            <span class="result-label">Total Score:</span>
+            <span class="result-value">{{ score }}</span>
+          </div>
+        </div>
+        
+        <ion-button 
+          expand="block" 
+          class="play-again-button"
+          (click)="playAgain()">
+          <ion-icon name="refresh" slot="start"></ion-icon>
+          Play Again
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

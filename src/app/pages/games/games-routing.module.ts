@@ -11,6 +11,10 @@ const routes: Routes = [
   {
     path: 'number-tap',
     loadChildren: () => import('./number-tap/number-tap.module').then( m => m.NumberTapPageModule)
+  },
+  {
+    path: 'hangman',
+    loadChildren: () => import('./hangman/hangman.module').then( m => m.HangmanPageModule)
   }
 ];
 
