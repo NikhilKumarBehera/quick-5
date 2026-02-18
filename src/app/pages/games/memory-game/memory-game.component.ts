@@ -45,11 +45,12 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
   previewTimeLeft: number = 0;
   gameTimeElapsed: number = 0;
   lastScore: GameScore | null = null;
+  isScrolled: boolean = false;
 
   difficultyOptions = [
     { label: 'Easy', value: 'easy' as const, icon: '🎯', description: '5s preview' },
     { label: 'Medium', value: 'medium' as const, icon: '⚡', description: '3s preview' },
-    { label: 'Hard', value: 'hard' as const, icon: '��', description: '1.5s preview' },
+    { label: 'Hard', value: 'hard' as const, icon: '🔥', description: '1.5s preview' },
   ];
 
   private timerSubscription?: Subscription;
@@ -258,5 +259,11 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  onScroll(event: any): void {
+    const scrollTop = event.detail.scrollTop;
+    this.isScrolled = scrollTop > 50;
+    this.cdr.markForCheck();
   }
 }

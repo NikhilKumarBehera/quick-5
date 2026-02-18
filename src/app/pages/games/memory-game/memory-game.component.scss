@@ -1,8 +1,74 @@
 // Memory Game Page Styles
 
-.memory-header {
+// ==================== HEADER ====================
+.memory-toolbar {
   --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: padding 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: #f5f7fa;
+    border-radius: 30px 30px 0 0;
+  }
+
+  &.scrolled {
+    padding: 20px 16px 20px;
+  }
+}
+
+.memory-title {
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.5px;
+  transition: font-size 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+
+  .title-icon {
+    font-size: 30px;
+  }
+}
+
+.back-button {
   --color: white;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  --padding-start: 0;
+  --padding-end: 0;
+  margin: 0;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+.score-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 10px 16px;
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 18px;
+  }
 }
 
 .memory-content {
@@ -102,13 +168,14 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem 1rem;
-  border: 2px solid #dee2e6;
-  border-radius: 12px;
-  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
   &::before {
     content: '';
@@ -117,9 +184,9 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
     opacity: 0;
-    transition: left 0.3s ease;
+    transition: all 0.3s ease;
     z-index: 0;
   }
 
@@ -130,7 +197,7 @@
 
     &::before {
       left: 0;
-      opacity: 0.1;
+      opacity: 1;
     }
   }
 
@@ -145,19 +212,19 @@
 }
 
 .difficulty-icon {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin-bottom: 0.5rem;
 }
 
 .difficulty-name {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: #212529;
   margin-bottom: 0.25rem;
 }
 
 .difficulty-desc {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #6c757d;
   text-align: center;
 }
@@ -334,8 +401,29 @@
   font-weight: 700;
   font-size: 2rem;
 
+  .card-icon {
+    font-size: 3rem;
+    opacity: 0.9;
+    animation: cardPulse 2s ease-in-out infinite;
+  }
+
   @media (max-width: 480px) {
     font-size: 1.5rem;
+    
+    .card-icon {
+      font-size: 2.25rem;
+    }
+  }
+}
+
+@keyframes cardPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
   }
 }
 
@@ -350,42 +438,66 @@
 // ============================================================================
 
 .preview-overlay {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  animation: slideDown 0.3s ease-out;
+}
+
+.preview-banner {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
-  animation: fadeIn 0.3s ease-in;
-}
+  gap: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1.25rem 1rem;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  border-radius: 0 0 20px 20px;
 
-.preview-content {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.3s ease-out;
+  .preview-icon {
+    font-size: 28px;
+    color: white;
+    animation: blink 1.5s ease-in-out infinite;
+  }
 
-  h2 {
+  .preview-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .preview-timer {
     font-size: 1.5rem;
-    margin: 0 0 1rem 0;
-    color: #212529;
+    font-weight: 800;
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    min-width: 60px;
+    text-align: center;
   }
 }
 
-.preview-timer {
-  font-size: 3rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: pulse 1s ease-in-out infinite;
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 @keyframes pulse {

@@ -1,13 +1,26 @@
-<ion-header class="ion-no-border memory-header">
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar class="memory-toolbar" [class.scrolled]="isScrolled">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/games"></ion-back-button>
+      <ion-button class="back-button" routerLink="/games" fill="clear">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>🧠 Memory Game</ion-title>
+    
+    <ion-title class="memory-title">
+      <span class="title-icon">🧠</span>
+      <span class="title-text">Memory Game</span>
+    </ion-title>
+    
+    <ion-buttons slot="end" *ngIf="gameState === 'playing'">
+      <div class="score-badge-header">
+        <ion-icon name="time"></ion-icon>
+        <span>{{ formatTime(gameTimeElapsed) }}</span>
+      </div>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding memory-content" [fullscreen]="true">
+<ion-content class="ion-padding memory-content" [fullscreen]="true" (ionScroll)="onScroll($event)">
   <!-- MENU STATE -->
   <div class="game-view" *ngIf="gameState === 'menu'">
     <div class="menu-container">
@@ -54,8 +67,9 @@
       </div>
 
       <div class="preview-overlay" *ngIf="gameState === 'showing'">
-        <div class="preview-content">
-          <h2>Remember the cards!</h2>
+        <div class="preview-banner">
+          <ion-icon name="eye-outline" class="preview-icon"></ion-icon>
+          <span class="preview-text">Memorize!</span>
           <div class="preview-timer">{{ previewTimeLeft.toFixed(1) }}s</div>
         </div>
       </div>
@@ -70,7 +84,9 @@
           (click)="onCardClick(card)"
           [disabled]="true"
           [attr.aria-label]="'Card ' + card.id">
-          <div class="card-face card-front">?</div>
+          <div class="card-face card-front">
+            <ion-icon name="help-circle" class="card-icon"></ion-icon>
+          </div>
           <div class="card-face card-back">{{ card.emoji }}</div>
         </button>
       </div>
@@ -122,7 +138,9 @@
           [disabled]="isGameLocked || card.isMatched"
           [attr.aria-label]="'Card ' + card.id"
           [attr.aria-pressed]="card.isFlipped">
-          <div class="card-face card-front">?</div>
+          <div class="card-face card-front">
+            <ion-icon name="help-circle" class="card-icon"></ion-icon>
+          </div>
           <div class="card-face card-back">{{ card.emoji }}</div>
         </button>
       </div>
