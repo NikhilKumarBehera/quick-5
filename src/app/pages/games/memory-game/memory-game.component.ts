@@ -9,7 +9,7 @@ interface Card {
   isShaking: boolean;
 }
 
-interface GameScore {
+export interface GameScore {
   matched: number;
   attempts: number;
   totalCards: number;
