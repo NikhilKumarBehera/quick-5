@@ -4,7 +4,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { GameScore } from '../../../shared/components/memory-game/memory-game.component';
+import { GameScore } from '../memory-game/memory-game.component';
 
 @Component({
   selector: 'app-memory-game-example',

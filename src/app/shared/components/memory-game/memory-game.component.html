@@ -1,125 +1,85 @@
-<div 
-  class="memory-game-container"
-  [ngClass]="getGameStateClass()">
-  
-  <!-- Header Section -->
+<div class="memory-game-container" [ngClass]="getGameStateClass()">
+  <!-- Header with Stats -->
   <div class="game-header">
-    <h2 class="game-title">Memory Match Game</h2>
-    
-    <!-- Stats -->
-    <div class="game-stats">
-      <div class="stat-item">
+    <h2>🧠 Memory Game</h2>
+    <div class="stats-grid">
+      <div class="stat">
         <span class="stat-label">Moves</span>
         <span class="stat-value">{{ moves }}</span>
       </div>
-      
-      <div class="stat-item">
+      <div class="stat">
         <span class="stat-label">Matched</span>
-        <span class="stat-value">{{ matchedPairs }}/{{ EMOJI_PAIRS.length / 2 | number }}</span>
+        <span class="stat-value">{{ matchedPairs }}/8</span>
       </div>
-      
-      <div class="stat-item">
+      <div class="stat">
         <span class="stat-label">Accuracy</span>
         <span class="stat-value">{{ getAccuracy() }}%</span>
       </div>
     </div>
   </div>
 
-  <!-- Preview Timer (showing phase) -->
-  <div class="preview-section" *ngIf="gameState === 'showing'">
-    <div class="preview-message">
-      <p class="message-text">Get ready! Memorize the cards...</p>
-      <div class="timer">
-        <div class="timer-circle">
-          <span class="timer-value">{{ previewTimeLeft }}s</span>
-        </div>
+  <!-- Preview Phase Overlay -->
+  <div class="preview-overlay" *ngIf="gameState === 'showing'">
+    <div class="preview-content">
+      <h3>Remember the cards!</h3>
+      <div class="timer" [style.animation]="'bounce 1s ease-in-out infinite'">
+        {{ previewTimeLeft.toFixed(1) }}s
       </div>
     </div>
   </div>
 
   <!-- Game Board -->
   <div class="game-board">
-    <div 
+    <button
       *ngFor="let card of cards; trackBy: trackByCardId"
-      class="card-wrapper"
-      [ngClass]="{ 'is-matched': card.isMatched }">
-      
-      <div
-        class="card"
-        [ngClass]="{ 
-          'is-flipped': card.isFlipped,
-          'is-shaking': card.isShaking,
-          'is-matched': card.isMatched
-        }"
-        (click)="onCardClick(card)"
-        [attr.tabindex]="isGameLocked || card.isFlipped || card.isMatched ? -1 : 0"
-        (keydown.enter)="onCardClick(card)"
-        (keydown.space)="onCardClick(card)"
-        [attr.aria-label]="'Card ' + card.id + (card.isMatched ? ' matched' : '')"
-        [attr.aria-pressed]="card.isFlipped"
-        role="button">
-        
-        <!-- Card Front (Hidden) -->
-        <div class="card-front">
-          <div class="card-face">?</div>
-        </div>
-
-        <!-- Card Back (Showing emoji) -->
-        <div class="card-back">
-          <div class="card-emoji">{{ card.emoji }}</div>
-        </div>
-      </div>
-    </div>
+      class="card"
+      [class.flipped]="card.isFlipped"
+      [class.matched]="card.isMatched"
+      [class.shaking]="card.isShaking"
+      (click)="onCardClick(card)"
+      [disabled]="gameState !== 'playing' || isGameLocked || card.isMatched"
+      [attr.aria-label]="'Card ' + card.id + (card.isMatched ? ' matched' : '')"
+      [attr.aria-pressed]="card.isFlipped">
+      <div class="card-front">?</div>
+      <div class="card-back">{{ card.emoji }}</div>
+    </button>
   </div>
 
-  <!-- Game Complete Modal -->
+  <!-- Completion Modal -->
   <div class="completion-overlay" *ngIf="gameState === 'completed'">
     <div class="completion-card">
-      <div class="completion-header">
-        <h3 class="completion-title">🎉 Game Complete!</h3>
+      <h2>🎉 Game Complete!</h2>
+      
+      <div class="score-display">
+        <div class="score-item">
+          <span class="score-label">Total Moves</span>
+          <span class="score-number">{{ moves }}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Accuracy</span>
+          <span class="score-number">{{ getAccuracy() }}%</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Pairs Found</span>
+          <span class="score-number">{{ matchedPairs }}/8</span>
+        </div>
       </div>
 
-      <div class="completion-stats">
-        <div class="stat-row">
-          <span class="stat-name">Total Moves:</span>
-          <span class="stat-result">{{ moves }}</span>
-        </div>
+      <!-- Star Rating -->
+      <div class="star-rating">
+        <span *ngIf="getAccuracy() >= 95" class="star">⭐</span>
+        <span *ngIf="getAccuracy() >= 95" class="star">⭐</span>
+        <span *ngIf="getAccuracy() >= 95" class="star">⭐</span>
         
-        <div class="stat-row">
-          <span class="stat-name">Accuracy:</span>
-          <span class="stat-result">{{ getAccuracy() }}%</span>
-        </div>
+        <span *ngIf="getAccuracy() >= 85 && getAccuracy() < 95" class="star">⭐</span>
+        <span *ngIf="getAccuracy() >= 85 && getAccuracy() < 95" class="star">⭐</span>
         
-        <div class="stat-row">
-          <span class="stat-name">Pairs Matched:</span>
-          <span class="stat-result">{{ matchedPairs }}/{{ EMOJI_PAIRS.length / 2 | number }}</span>
-        </div>
+        <span *ngIf="getAccuracy() >= 70 && getAccuracy() < 85" class="star">⭐</span>
       </div>
 
-      <div class="completion-rating">
-        <div class="rating-stars">
-          <span class="star" *ngIf="getAccuracy() >= 70">⭐</span>
-          <span class="star" *ngIf="getAccuracy() >= 85">⭐</span>
-          <span class="star" *ngIf="getAccuracy() >= 95">⭐</span>
-        </div>
-        <p class="rating-text">
-          <span *ngIf="getAccuracy() >= 95">Excellent! Perfect match!</span>
-          <span *ngIf="getAccuracy() >= 85 && getAccuracy() < 95">Great job! Very good!</span>
-          <span *ngIf="getAccuracy() >= 70 && getAccuracy() < 85">Good effort! Keep practicing!</span>
-          <span *ngIf="getAccuracy() < 70">Nice try! Play again!</span>
-        </p>
-      </div>
-
-      <button 
-        class="restart-button"
-        (click)="restartGame()"
-        aria-label="Restart game">
-        <ion-icon name="refresh"></ion-icon>
+      <button class="restart-btn" (click)="restartGame()">
         Play Again
       </button>
     </div>
   </div>
-
-  <!-- Background gradient overlay -->
-  <div class="background-gradient"></div>
 </div>
