@@ -6,7 +6,6 @@ export * from './stats-grid/stats-grid.component';
 export * from './button-group/button-group.component';
 export * from './progress-bar/progress-bar.component';
 export * from './option-button/option-button.component';
-export * from './memory-game/memory-game.component';
 
 // Component array for module declarations
 import { HeaderComponent } from './header/header.component';
@@ -15,7 +14,6 @@ import { StatsGridComponent } from './stats-grid/stats-grid.component';
 import { ButtonGroupComponent } from './button-group/button-group.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { OptionButtonComponent } from './option-button/option-button.component';
-import { MemoryGameComponent } from './memory-game/memory-game.component';
 
 export const SHARED_COMPONENTS = [
   HeaderComponent,
@@ -24,5 +22,4 @@ export const SHARED_COMPONENTS = [
   ButtonGroupComponent,
   ProgressBarComponent,
   OptionButtonComponent,
-  MemoryGameComponent,
 ];
