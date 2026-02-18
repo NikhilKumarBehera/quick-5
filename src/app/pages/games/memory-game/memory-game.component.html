@@ -85,7 +85,12 @@
           [disabled]="true"
           [attr.aria-label]="'Card ' + card.id">
           <div class="card-face card-front">
-            <ion-icon name="help-circle" class="card-icon"></ion-icon>
+            <div class="card-pattern">
+              <div class="pattern-circle"></div>
+              <div class="pattern-circle"></div>
+              <div class="pattern-circle"></div>
+              <div class="pattern-circle"></div>
+            </div>
           </div>
           <div class="card-face card-back">{{ card.emoji }}</div>
         </button>
@@ -139,7 +144,12 @@
           [attr.aria-label]="'Card ' + card.id"
           [attr.aria-pressed]="card.isFlipped">
           <div class="card-face card-front">
-            <ion-icon name="help-circle" class="card-icon"></ion-icon>
+            <div class="card-pattern">
+              <div class="pattern-circle"></div>
+              <div class="pattern-circle"></div>
+              <div class="pattern-circle"></div>
+              <div class="pattern-circle"></div>
+            </div>
           </div>
           <div class="card-face card-back">{{ card.emoji }}</div>
         </button>
