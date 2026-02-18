@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { MemoryGamePageRoutingModule } from './memory-game-routing.module';
-import { MemoryGamePage } from './memory-game.page';
-import { MemoryGameComponent } from 'src/app/shared/components/memory-game/memory-game.component';
+import { MemoryGameComponent } from './memory-game.component';
+import { MemoryGameRoutingModule } from './memory-game-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     IonicModule,
-    MemoryGamePageRoutingModule,
-    MemoryGameComponent
+    MemoryGameRoutingModule
   ],
-  declarations: [MemoryGamePage]
+  declarations: [MemoryGameComponent]
 })
 export class MemoryGameModule { }
