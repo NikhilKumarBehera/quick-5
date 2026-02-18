@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/games"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Memory Game</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Difficulty Selector -->
+  <div class="difficulty-selector">
+    <ion-label>Difficulty Level:</ion-label>
+    <div class="difficulty-buttons">
+      <button
+        *ngFor="let option of difficultyOptions"
+        class="difficulty-btn"
+        [class.active]="difficulty === option.value"
+        (click)="changeDifficulty(option.value)">
+        {{ option.label }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Game Component -->
+  <app-memory-game
+    [difficulty]="difficulty"
+    [showHints]="showHints"
+    [enableSounds]="enableSounds"
+    (gameComplete)="onGameComplete($event)"
+    (scoreUpdate)="onScoreUpdate($event)">
+  </app-memory-game>
+
+  <!-- Last Score Display -->
+  <div class="last-score" *ngIf="lastScore">
+    <h3>Last Game Stats</h3>
+    <div class="score-info">
+      <span>Moves: {{ lastScore.moves }}</span>
+      <span>Accuracy: {{ lastScore.percentage }}%</span>
+    </div>
+  </div>
+</ion-content>
