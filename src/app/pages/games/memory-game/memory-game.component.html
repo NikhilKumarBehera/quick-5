@@ -68,7 +68,7 @@
           [class.matched]="card.isMatched"
           [class.shaking]="card.isShaking"
           (click)="onCardClick(card)"
-          [disabled]="gameState !== 'playing' || isGameLocked || card.isMatched"
+          [disabled]="true"
           [attr.aria-label]="'Card ' + card.id">
           <div class="card-face card-front">?</div>
           <div class="card-face card-back">{{ card.emoji }}</div>
@@ -119,7 +119,7 @@
           [class.matched]="card.isMatched"
           [class.shaking]="card.isShaking"
           (click)="onCardClick(card)"
-          [disabled]="gameState !== 'playing' || isGameLocked || card.isMatched"
+          [disabled]="isGameLocked || card.isMatched"
           [attr.aria-label]="'Card ' + card.id"
           [attr.aria-pressed]="card.isFlipped">
           <div class="card-face card-front">?</div>
