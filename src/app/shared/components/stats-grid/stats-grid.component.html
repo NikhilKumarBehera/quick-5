@@ -1,0 +1,30 @@
+<div 
+  class="stats-grid" 
+  [ngClass]="['cols-' + columns, 'size-' + size]"
+  role="region"
+  [attr.aria-label]="'Statistics grid with ' + stats.length + ' items'">
+  
+  <div 
+    *ngFor="let stat of stats; trackBy: trackByLabel; let i = index"
+    class="stat-item" 
+    [ngClass]="{ 'has-divider': showDividers && i < stats.length - 1, 'centered': centered }"
+    role="article"
+    [attr.aria-label]="stat.label + ': ' + stat.value">
+    
+    <ion-icon 
+      *ngIf="stat.icon" 
+      [name]="stat.icon" 
+      [style.color]="stat.color"
+      class="stat-icon"
+      aria-hidden="true">
+    </ion-icon>
+    
+    <div class="stat-value" [attr.aria-level]="3">
+      {{ stat.value }}
+    </div>
+    
+    <div class="stat-label">
+      {{ stat.label }}
+    </div>
+  </div>
+</div>

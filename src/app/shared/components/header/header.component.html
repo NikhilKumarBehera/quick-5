@@ -1,0 +1,65 @@
+<header 
+  class="app-header"
+  [ngClass]="[gradientClass]"
+  role="banner"
+  [attr.aria-label]="'Page header: ' + title">
+  
+  <div class="header-content">
+    <!-- Title Section -->
+    <div class="title-section">
+      <h1 class="header-title" [attr.aria-level]="1">
+        {{ title }}
+      </h1>
+      
+      <!-- Subtitle -->
+      <p 
+        *ngIf="subtitle && !hideSubtitle" 
+        class="header-subtitle"
+        [@slideDown]
+        role="doc-subtitle">
+        {{ subtitle }}
+      </p>
+    </div>
+
+    <!-- Streak Card Section -->
+    <div 
+      *ngIf="username && showTrophy"
+      class="streak-card"
+      role="region"
+      [attr.aria-label]="'Streak and trophy information for ' + username">
+      
+      <div class="streak-info">
+        <ion-icon 
+          name="trophy" 
+          class="trophy-icon"
+          aria-hidden="true">
+        </ion-icon>
+        
+        <span class="username" [attr.aria-label]="'User: ' + username">
+          {{ username }}
+        </span>
+      </div>
+
+      <!-- Right Button -->
+      <button
+        *ngIf="showTrophy"
+        (click)="onRightButtonClick()"
+        class="right-button"
+        [attr.aria-label]="'Open ' + rightIcon"
+        type="button">
+        <ion-icon 
+          [name]="rightIcon"
+          aria-hidden="true">
+        </ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scroll sensor -->
+  <div 
+    #scrollContainer
+    class="scroll-sensor"
+    (scroll)="onScroll($event)"
+    aria-hidden="true">
+  </div>
+</header>

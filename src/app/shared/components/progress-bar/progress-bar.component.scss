@@ -1,0 +1,147 @@
+// Progress Bar Component Styles
+
+@import '../../styles/variables.scss';
+
+.progress-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  padding: 0 4px;
+}
+
+.progress-label {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.progress-percentage {
+  color: var(--ion-color-primary);
+  font-weight: 700;
+}
+
+.progress-track {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+
+  // Sizes
+  &.size-small {
+    height: 4px;
+  }
+
+  &.size-medium {
+    height: 8px;
+  }
+
+  &.size-large {
+    height: 12px;
+  }
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width 0.6s ease;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+
+  // Colors
+  &.color-primary {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  }
+
+  &.color-success {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  }
+
+  &.color-warning {
+    background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+  }
+
+  &.color-danger {
+    background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+  }
+
+  // Animated
+  &.animated::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  // Striped
+  &.striped {
+    background-image: repeating-linear-gradient(
+      45deg,
+      currentColor,
+      currentColor 10px,
+      rgba(255, 255, 255, 0.1) 10px,
+      rgba(255, 255, 255, 0.1) 20px
+    );
+
+    &.animated {
+      animation: stripe-animation 1s linear infinite;
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes stripe-animation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 0;
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .progress-header {
+    font-size: 11px;
+  }
+
+  .progress-track {
+    &.size-small {
+      height: 3px;
+    }
+
+    &.size-medium {
+      height: 6px;
+    }
+
+    &.size-large {
+      height: 10px;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<div 
+  class="progress-container"
+  role="region"
+  [attr.aria-label]="label || 'Progress indicator'">
+  
+  <!-- Progress Header with Label -->
+  <div 
+    class="progress-header"
+    *ngIf="showLabel">
+    
+    <span class="progress-label" *ngIf="label">
+      {{ label }}
+    </span>
+    
+    <span 
+      class="progress-percentage"
+      role="status"
+      [attr.aria-live]="'polite'"
+      [attr.aria-atomic]="'true'">
+      {{ percent }}%
+    </span>
+  </div>
+
+  <!-- Progress Track and Fill -->
+  <div 
+    class="progress-track"
+    role="progressbar"
+    [attr.aria-label]="label || 'Progress'"
+    [attr.aria-valuenow]="percent"
+    [attr.aria-valuemin]="0"
+    [attr.aria-valuemax]="100"
+    [attr.aria-valuetext]="percent + '%'">
+    
+    <div
+      class="progress-fill"
+      [ngClass]="getProgressClass()"
+      [style.width.%]="percent"
+      [style.backgroundColor]="color === 'custom' ? customColor : null"
+      aria-hidden="true">
+    </div>
+  </div>
+</div>

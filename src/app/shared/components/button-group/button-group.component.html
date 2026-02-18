@@ -1,0 +1,27 @@
+<div 
+  class="button-group" 
+  [ngClass]="['layout-' + layout, 'size-' + size, 'variant-' + variant]"
+  role="group"
+  [attr.aria-label]="'Button group with ' + buttons.length + ' actions'">
+  
+  <ion-button
+    *ngFor="let button of buttons; trackBy: trackByAction; let index = index"
+    [expand]="expand"
+    [color]="button.color || 'primary'"
+    [fill]="variant === 'solid' ? 'solid' : variant === 'outline' ? 'outline' : 'clear'"
+    [disabled]="button.disabled"
+    (click)="onButtonClick(button.action)"
+    class="action-button"
+    [attr.aria-label]="button.label"
+    [attr.aria-disabled]="button.disabled || false">
+    
+    <ion-icon 
+      *ngIf="button.icon" 
+      [name]="button.icon" 
+      slot="start"
+      [attr.aria-hidden]="'true'">
+    </ion-icon>
+    
+    <span class="button-label">{{ button.label }}</span>
+  </ion-button>
+</div>

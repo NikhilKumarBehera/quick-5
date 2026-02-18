@@ -1,0 +1,238 @@
+/**
+ * Utilities & Common Classes
+ * Reusable utility classes for common patterns
+ */
+
+@import './variables.scss';
+
+// Display utilities
+.d-none {
+  display: none;
+}
+
+.d-block {
+  display: block;
+}
+
+.d-inline {
+  display: inline;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-grid {
+  display: grid;
+}
+
+// Flexbox utilities
+.flex-center {
+  @include flex-center;
+}
+
+.flex-between {
+  @include flex-between;
+}
+
+.flex-column {
+  @include flex-column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-items-start {
+  align-items: flex-start;
+}
+
+.align-items-end {
+  align-items: flex-end;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+// Spacing utilities
+.p-0 { padding: 0; }
+.p-xs { padding: $space-xs; }
+.p-sm { padding: $space-sm; }
+.p-md { padding: $space-md; }
+.p-lg { padding: $space-lg; }
+.p-xl { padding: $space-xl; }
+.p-2xl { padding: $space-2xl; }
+
+.px-0 { padding-left: 0; padding-right: 0; }
+.px-xs { padding-left: $space-xs; padding-right: $space-xs; }
+.px-sm { padding-left: $space-sm; padding-right: $space-sm; }
+.px-md { padding-left: $space-md; padding-right: $space-md; }
+.px-lg { padding-left: $space-lg; padding-right: $space-lg; }
+.px-xl { padding-left: $space-xl; padding-right: $space-xl; }
+
+.py-0 { padding-top: 0; padding-bottom: 0; }
+.py-xs { padding-top: $space-xs; padding-bottom: $space-xs; }
+.py-sm { padding-top: $space-sm; padding-bottom: $space-sm; }
+.py-md { padding-top: $space-md; padding-bottom: $space-md; }
+.py-lg { padding-top: $space-lg; padding-bottom: $space-lg; }
+.py-xl { padding-top: $space-xl; padding-bottom: $space-xl; }
+
+.m-0 { margin: 0; }
+.m-xs { margin: $space-xs; }
+.m-sm { margin: $space-sm; }
+.m-md { margin: $space-md; }
+.m-lg { margin: $space-lg; }
+.m-xl { margin: $space-xl; }
+.m-2xl { margin: $space-2xl; }
+
+.mx-0 { margin-left: 0; margin-right: 0; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mx-xs { margin-left: $space-xs; margin-right: $space-xs; }
+.mx-sm { margin-left: $space-sm; margin-right: $space-sm; }
+.mx-md { margin-left: $space-md; margin-right: $space-md; }
+.mx-lg { margin-left: $space-lg; margin-right: $space-lg; }
+.mx-xl { margin-left: $space-xl; margin-right: $space-xl; }
+
+.my-0 { margin-top: 0; margin-bottom: 0; }
+.my-xs { margin-top: $space-xs; margin-bottom: $space-xs; }
+.my-sm { margin-top: $space-sm; margin-bottom: $space-sm; }
+.my-md { margin-top: $space-md; margin-bottom: $space-md; }
+.my-lg { margin-top: $space-lg; margin-bottom: $space-lg; }
+.my-xl { margin-top: $space-xl; margin-bottom: $space-xl; }
+
+// Text utilities
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.text-truncate {
+  @include text-truncate;
+}
+
+.text-xs { font-size: $font-size-xs; }
+.text-sm { font-size: $font-size-sm; }
+.text-base { font-size: $font-size-base; }
+.text-lg { font-size: $font-size-lg; }
+.text-xl { font-size: $font-size-xl; }
+.text-2xl { font-size: $font-size-2xl; }
+.text-3xl { font-size: $font-size-3xl; }
+.text-4xl { font-size: $font-size-4xl; }
+
+.font-light { font-weight: $font-weight-light; }
+.font-normal { font-weight: $font-weight-normal; }
+.font-medium { font-weight: $font-weight-medium; }
+.font-semibold { font-weight: $font-weight-semibold; }
+.font-bold { font-weight: $font-weight-bold; }
+
+.leading-tight { line-height: $line-height-tight; }
+.leading-normal { line-height: $line-height-normal; }
+.leading-relaxed { line-height: $line-height-relaxed; }
+
+// Color utilities
+.text-primary { color: $color-primary; }
+.text-secondary { color: $color-secondary; }
+.text-success { color: $color-success; }
+.text-warning { color: $color-warning; }
+.text-danger { color: $color-danger; }
+.text-info { color: $color-info; }
+.text-light { color: $color-text-light; }
+.text-dark { color: $color-text-dark; }
+
+.bg-primary { background-color: $color-primary; }
+.bg-secondary { background-color: $color-secondary; }
+.bg-success { background-color: $color-success; }
+.bg-warning { background-color: $color-warning; }
+.bg-danger { background-color: $color-danger; }
+.bg-info { background-color: $color-info; }
+.bg-light { background-color: $color-light-gray; }
+.bg-white { background-color: $color-white; }
+
+// Border radius
+.rounded-none { border-radius: $border-radius-none; }
+.rounded-sm { border-radius: $border-radius-sm; }
+.rounded-md { border-radius: $border-radius-md; }
+.rounded-lg { border-radius: $border-radius-lg; }
+.rounded-xl { border-radius: $border-radius-xl; }
+.rounded-full { border-radius: $border-radius-full; }
+
+// Shadow utilities
+.shadow-sm { @include elevation(1); }
+.shadow-md { @include elevation(2); }
+.shadow-lg { @include elevation(3); }
+.shadow-xl { @include elevation(4); }
+.shadow-2xl { @include elevation(5); }
+
+// Overflow utilities
+.overflow-hidden { overflow: hidden; }
+.overflow-visible { overflow: visible; }
+.overflow-auto { overflow: auto; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-y-auto { overflow-y: auto; }
+
+// Position utilities
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+// Width and height
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.w-auto { width: auto; }
+.h-auto { height: auto; }
+
+// Visibility
+.visible { visibility: visible; }
+.invisible { visibility: hidden; }
+.hidden { display: none !important; }
+
+// Opacity utilities
+.opacity-0 { opacity: 0; }
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+// Cursor utilities
+.cursor-pointer { cursor: pointer; }
+.cursor-default { cursor: default; }
+.cursor-not-allowed { cursor: not-allowed; }
+.cursor-text { cursor: text; }
+
+// Transition utilities
+.transition-fast { @include transition($duration: $transition-fast); }
+.transition-base { @include transition($duration: $transition-base); }
+.transition-slow { @include transition($duration: $transition-slow); }

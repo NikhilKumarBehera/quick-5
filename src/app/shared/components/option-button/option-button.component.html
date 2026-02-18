@@ -1,0 +1,33 @@
+<ion-button
+  (click)="onClick()"
+  (keydown.enter)="onClick()"
+  (keydown.space)="onClick()"
+  [ngClass]="getButtonClass()"
+  [disabled]="disabled"
+  expand="block"
+  fill="outline"
+  [attr.role]="'radio'"
+  [attr.aria-label]="text"
+  [attr.aria-checked]="state === 'selected' || state === 'correct'"
+  [attr.aria-disabled]="disabled"
+  [attr.tabindex]="disabled ? -1 : 0">
+  
+  <ion-icon
+    *ngIf="icon"
+    [name]="icon"
+    slot="start"
+    aria-hidden="true">
+  </ion-icon>
+  
+  <span class="option-text">
+    {{ text }}
+  </span>
+  
+  <ion-icon
+    *ngIf="state !== 'default'"
+    [name]="getStateIcon()"
+    [color]="getStateColor()"
+    slot="end"
+    [attr.aria-label]="'Status: ' + state">
+  </ion-icon>
+</ion-button>
