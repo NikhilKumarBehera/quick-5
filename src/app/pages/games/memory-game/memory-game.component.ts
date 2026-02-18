@@ -1,416 +1,262 @@
-/**
- * Memory Game Component
- *
- * @component
- * Interactive 4x4 memory card matching game
- * Features: card flipping, matching validation, scoring, animations, shuffle effects
- *
- * @example
- * ```html
- * <app-memory-game
- *   [difficulty]="'medium'"
- *   [showHints]="true"
- *   (gameComplete)="onGameComplete($event)"
- *   (scoreUpdate)="onScoreUpdate($event)">
- * </app-memory-game>
- * ```
- *
- * @used-in Games, Challenges, Activities pages
- */
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-  Input,
-  OnDestroy,
-} from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
-export interface Card {
-  id: number;
+interface Card {
+  id: string;
   emoji: string;
   isFlipped: boolean;
   isMatched: boolean;
-  isShaking?: boolean;
+  isShaking: boolean;
 }
 
-export interface GameScore {
+interface GameScore {
   matched: number;
   attempts: number;
   totalCards: number;
   percentage: number;
   moves: number;
+  timeElapsed: number;
+}
+
+type GameState = 'menu' | 'initializing' | 'showing' | 'playing' | 'completed';
+
+interface DifficultySettings {
+  previewTime: number;
+  flipDuration: number;
+  name: string;
 }
 
 @Component({
   selector: 'app-memory-game',
   templateUrl: './memory-game.component.html',
   styleUrls: ['./memory-game.component.scss'],
+  standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MemoryGameComponent implements OnInit, OnDestroy {
-  /**
-   * Game difficulty level
-   * Affects initial card preview duration and animation speed
-   * @type {'easy' | 'medium' | 'hard'}
-   * @default 'medium'
-   */
-  @Input() difficulty: 'easy' | 'medium' | 'hard' = 'medium';
-
-  /**
-   * Show hint system during gameplay
-   * @type {boolean}
-   * @default false
-   */
-  @Input() showHints: boolean = false;
-
-  /**
-   * Enable/disable sound effects
-   * @type {boolean}
-   * @default true
-   */
-  @Input() enableSounds: boolean = true;
-
-  /**
-   * Emitted when game is completed
-   * @type {EventEmitter<GameScore>}
-   * @event
-   */
-  @Output() gameComplete = new EventEmitter<GameScore>();
-
-  /**
-   * Emitted when score updates
-   * @type {EventEmitter<GameScore>}
-   * @event
-   */
-  @Output() scoreUpdate = new EventEmitter<GameScore>();
-
-  /**
-   * Array of cards in the game
-   * @type {Card[]}
-   * @internal
-   */
+  gameState: GameState = 'menu';
+  difficulty: 'easy' | 'medium' | 'hard' = 'medium';
   cards: Card[] = [];
-
-  /**
-   * Currently flipped cards (max 2)
-   * @type {Card[]}
-   * @internal
-   */
-  flippedCards: Card[] = [];
-
-  /**
-   * Number of matched pairs
-   * @type {number}
-   * @internal
-   */
+  flippedCards: string[] = [];
   matchedPairs: number = 0;
-
-  /**
-   * Total number of attempts/moves
-   * @type {number}
-   * @internal
-   */
   attempts: number = 0;
-
-  /**
-   * Total number of moves (incremented once per pair attempt)
-   * @type {number}
-   * @internal
-   */
   moves: number = 0;
-
-  /**
-   * Game state: initializing, playing, completing, completed
-   * @type {string}
-   * @internal
-   */
-  gameState: 'initializing' | 'showing' | 'playing' | 'completing' | 'completed' =
-    'initializing';
-
-  /**
-   * Is game locked (during card flip/match check)
-   * @type {boolean}
-   * @internal
-   */
   isGameLocked: boolean = false;
-
-  /**
-   * Time left for showing cards initially
-   * @type {number}
-   * @internal
-   */
   previewTimeLeft: number = 0;
+  gameTimeElapsed: number = 0;
+  lastScore: GameScore | null = null;
 
-  /**
-   * Unsubscribe trigger
-   * @type {Subject<void>}
-   * @internal
-   */
-  private destroy$ = new Subject<void>();
-
-  /**
-   * Emoji pairs for cards (8 pairs = 16 cards)
-   * @type {string[]}
-   * @internal
-   */
-  private readonly EMOJI_PAIRS: string[] = [
-    '🌟', '🌟', // Star
-    '🎨', '🎨', // Art
-    '🎭', '🎭', // Theater
-    '🎪', '🎪', // Circus
-    '🎯', '🎯', // Target
-    '🎲', '🎲', // Dice
-    '🎸', '🎸', // Guitar
-    '🎺', '🎺', // Trumpet
+  difficultyOptions = [
+    { label: 'Easy', value: 'easy' as const, icon: '🎯', description: '5s preview' },
+    { label: 'Medium', value: 'medium' as const, icon: '⚡', description: '3s preview' },
+    { label: 'Hard', value: 'hard' as const, icon: '��', description: '1.5s preview' },
   ];
 
-  /**
-   * Difficulty settings
-   * @type {object}
-   * @internal
-   */
-  private readonly DIFFICULTY_SETTINGS = {
-    easy: { previewTime: 5000, flipDuration: 400, delay: 200 },
-    medium: { previewTime: 3000, flipDuration: 300, delay: 150 },
-    hard: { previewTime: 1500, flipDuration: 200, delay: 100 },
+  private timerSubscription?: Subscription;
+  private gameTimerSubscription?: Subscription;
+
+  readonly EMOJI_PAIRS = ['🌟', '🎨', '🎭', '🎪', '🎯', '🎲', '🎸', '🎺'];
+
+  readonly DIFFICULTY_SETTINGS: Record<'easy' | 'medium' | 'hard', DifficultySettings> = {
+    easy: { previewTime: 5, flipDuration: 400, name: 'Easy' },
+    medium: { previewTime: 3, flipDuration: 300, name: 'Medium' },
+    hard: { previewTime: 1.5, flipDuration: 200, name: 'Hard' }
   };
 
-  /**
-   * Initialize game on component load
-   */
+  constructor(private cdr: ChangeDetectorRef) {}
+
   ngOnInit(): void {
-    this.initializeGame();
+    this.gameState = 'menu';
+    this.cdr.markForCheck();
   }
 
-  /**
-   * Cleanup on component destroy
-   */
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.timerSubscription?.unsubscribe();
+    this.gameTimerSubscription?.unsubscribe();
   }
 
-  /**
-   * Initialize or reset the game
-   * Creates shuffled cards and starts preview mode
-   * @private
-   */
+  startGame(level: 'easy' | 'medium' | 'hard'): void {
+    this.difficulty = level;
+    this.gameState = 'initializing';
+    this.initializeGame();
+    this.cdr.markForCheck();
+  }
+
   private initializeGame(): void {
     this.gameState = 'initializing';
-    this.isGameLocked = true;
-    this.cards = this.createAndShuffleCards();
+    this.createAndShuffleCards();
     this.matchedPairs = 0;
     this.attempts = 0;
     this.moves = 0;
-
-    // Show cards for preview duration
-    this.gameState = 'showing';
-    const previewTime = this.DIFFICULTY_SETTINGS[this.difficulty].previewTime;
-    this.previewTimeLeft = Math.round(previewTime / 100);
-
-    // Countdown timer
-    const countdownInterval = setInterval(() => {
-      this.previewTimeLeft--;
-      if (this.previewTimeLeft <= 0) {
-        clearInterval(countdownInterval);
-        this.startPlayingPhase();
-      }
-    }, 100);
+    this.flippedCards = [];
+    this.isGameLocked = false;
+    this.gameTimeElapsed = 0;
+    this.previewTimeLeft = this.DIFFICULTY_SETTINGS[this.difficulty].previewTime;
+    this.startGameTimer();
+    this.startShowingPhase();
+    this.cdr.markForCheck();
   }
 
-  /**
-   * Transition from showing phase to playing phase
-   * Flips all cards face down with shuffle animation
-   * @private
-   */
-  private startPlayingPhase(): void {
-    this.gameState = 'playing';
-    const flipDuration = this.DIFFICULTY_SETTINGS[this.difficulty].flipDuration;
-
-    // Flip all cards with staggered delay for shuffle effect
-    this.cards.forEach((card, index) => {
-      setTimeout(() => {
-        card.isFlipped = false;
-        if (index === this.cards.length - 1) {
-          this.isGameLocked = false;
-        }
-      }, index * 30);
+  private startGameTimer(): void {
+    this.gameTimerSubscription?.unsubscribe();
+    this.gameTimerSubscription = interval(1000).subscribe(() => {
+      this.gameTimeElapsed++;
+      this.cdr.markForCheck();
     });
   }
 
-  /**
-   * Create and shuffle card pairs
-   * @returns Array of shuffled cards
-   * @private
-   */
-  private createAndShuffleCards(): Card[] {
-    const cards: Card[] = this.EMOJI_PAIRS.map((emoji, index) => ({
-      id: index,
-      emoji,
-      isFlipped: true,
-      isMatched: false,
-    }));
-
-    // Fisher-Yates shuffle
-    for (let i = cards.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cards[i], cards[j]] = [cards[j], cards[i]];
-    }
-
-    return cards;
+  private startShowingPhase(): void {
+    this.gameState = 'showing';
+    this.cards = this.cards.map(card => ({ ...card, isFlipped: true }));
+    this.startPreviewTimer();
+    this.cdr.markForCheck();
   }
 
-  /**
-   * Handle card click event
-   * @param card - Clicked card
-   * @internal
-   */
+  private startPreviewTimer(): void {
+    this.timerSubscription?.unsubscribe();
+    this.timerSubscription = interval(100).subscribe(() => {
+      this.previewTimeLeft -= 0.1;
+      if (this.previewTimeLeft <= 0) {
+        this.timerSubscription?.unsubscribe();
+        this.startPlayingPhase();
+      }
+      this.cdr.markForCheck();
+    });
+  }
+
+  private startPlayingPhase(): void {
+    this.gameState = 'playing';
+    this.cards = this.cards.map(card => ({ ...card, isFlipped: false }));
+    this.flippedCards = [];
+    this.isGameLocked = false;
+    this.cdr.markForCheck();
+  }
+
+  private createAndShuffleCards(): void {
+    const cards: Card[] = [];
+    this.EMOJI_PAIRS.forEach((emoji, index) => {
+      cards.push(
+        { id: `${index}-0`, emoji, isFlipped: false, isMatched: false, isShaking: false },
+        { id: `${index}-1`, emoji, isFlipped: false, isMatched: false, isShaking: false }
+      );
+    });
+    this.cards = this.shuffleArray(cards);
+  }
+
+  private shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
   onCardClick(card: Card): void {
-    // Validate click
-    if (
-      this.isGameLocked ||
-      card.isFlipped ||
-      card.isMatched ||
-      this.gameState !== 'playing'
-    ) {
+    if (this.gameState !== 'playing' || this.isGameLocked || card.isMatched || this.flippedCards.includes(card.id)) {
       return;
     }
 
-    // Flip the card
+    this.flippedCards.push(card.id);
     card.isFlipped = true;
-    this.flippedCards.push(card);
+    this.attempts++;
 
-    // Check if two cards are flipped
     if (this.flippedCards.length === 2) {
-      this.attempts++;
+      this.isGameLocked = true;
       this.moves++;
-      this.checkForMatch();
+      setTimeout(() => this.checkForMatch(), 600);
     }
+
+    this.cdr.markForCheck();
   }
 
-  /**
-   * Check if flipped cards match
-   * If match: keep them flipped and emit success
-   * If no match: flip back with shake animation
-   * @private
-   */
   private checkForMatch(): void {
-    this.isGameLocked = true;
-    const [card1, card2] = this.flippedCards;
-    const isMatch = card1.emoji === card2.emoji;
+    const [id1, id2] = this.flippedCards;
+    const card1 = this.cards.find(c => c.id === id1)!;
+    const card2 = this.cards.find(c => c.id === id2)!;
 
-    if (isMatch) {
-      // Cards match
-      setTimeout(() => {
-        card1.isMatched = true;
-        card2.isMatched = true;
-        this.matchedPairs++;
+    if (card1.emoji === card2.emoji) {
+      card1.isMatched = true;
+      card2.isMatched = true;
+      this.matchedPairs++;
 
-        this.emitScoreUpdate();
-
-        // Check if game is complete
-        if (this.matchedPairs === this.EMOJI_PAIRS.length / 2) {
-          this.completeGame();
-        } else {
-          this.flippedCards = [];
-          this.isGameLocked = false;
-        }
-      }, 400);
+      if (this.matchedPairs === this.EMOJI_PAIRS.length) {
+        this.completeGame();
+      }
     } else {
-      // Cards don't match - shake and flip back
       card1.isShaking = true;
       card2.isShaking = true;
-
       setTimeout(() => {
         card1.isShaking = false;
         card2.isShaking = false;
         card1.isFlipped = false;
         card2.isFlipped = false;
-        this.flippedCards = [];
-        this.isGameLocked = false;
+        this.cdr.markForCheck();
       }, 600);
     }
+
+    this.flippedCards = [];
+    this.isGameLocked = false;
+    this.cdr.markForCheck();
   }
 
-  /**
-   * Complete the game and emit result
-   * @private
-   */
   private completeGame(): void {
+    this.gameTimerSubscription?.unsubscribe();
     this.gameState = 'completed';
     const score = this.calculateScore();
-    this.gameComplete.emit(score);
+    this.lastScore = score;
+    this.cdr.markForCheck();
   }
 
-  /**
-   * Emit current score update
-   * @private
-   */
-  private emitScoreUpdate(): void {
-    const score = this.calculateScore();
-    this.scoreUpdate.emit(score);
-  }
-
-  /**
-   * Calculate current game score
-   * @returns Game score object
-   * @private
-   */
   private calculateScore(): GameScore {
-    const totalCards = this.EMOJI_PAIRS.length;
-    const percentage = Math.round((this.matchedPairs / (totalCards / 2)) * 100);
+    const percentage = this.attempts > 0 
+      ? Math.round((this.matchedPairs * 2 / this.attempts) * 100)
+      : 0;
 
     return {
       matched: this.matchedPairs,
       attempts: this.attempts,
-      totalCards,
-      percentage,
+      totalCards: this.EMOJI_PAIRS.length * 2,
+      percentage: Math.min(percentage, 100),
       moves: this.moves,
+      timeElapsed: this.gameTimeElapsed
     };
   }
 
-  /**
-   * Restart the game
-   * Resets all counters and reinitializes
-   * @internal
-   */
   restartGame(): void {
-    this.flippedCards = [];
-    this.initializeGame();
+    this.gameState = 'menu';
+    this.cdr.markForCheck();
   }
 
-  /**
-   * Get accuracy percentage
-   * @returns Percentage of correct matches vs attempts
-   * @internal
-   */
   getAccuracy(): number {
-    if (this.attempts === 0) return 0;
-    return Math.round(((this.matchedPairs * 2) / this.attempts) * 100);
+    return this.attempts > 0 
+      ? Math.round((this.matchedPairs * 2 / this.attempts) * 100)
+      : 0;
   }
 
-  /**
-   * Get game state for template
-   * @returns Current game state string
-   * @internal
-   */
-  getGameStateClass(): string {
-    return `game-state-${this.gameState}`;
+  getStarRating(): number {
+    const accuracy = this.getAccuracy();
+    if (accuracy >= 95) return 3;
+    if (accuracy >= 85) return 2;
+    if (accuracy >= 70) return 1;
+    return 0;
   }
 
-  /**
-   * Track by function for *ngFor optimization
-   * @param index - Card index
-   * @param card - Card object
-   * @returns Card ID for tracking
-   * @internal
-   */
-  trackByCardId(index: number, card: Card): number {
+  getPerformanceMessage(): string {
+    const accuracy = this.getAccuracy();
+    if (accuracy >= 95) return '🏆 Perfect Match!';
+    if (accuracy >= 85) return '⭐ Excellent!';
+    if (accuracy >= 70) return '👍 Great!';
+    return '💪 Keep Playing!';
+  }
+
+  trackByCardId(index: number, card: Card): string {
     return card.id;
+  }
+
+  formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 }
