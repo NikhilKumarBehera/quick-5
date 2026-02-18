@@ -15,6 +15,10 @@ const routes: Routes = [
   {
     path: 'hangman',
     loadChildren: () => import('./hangman/hangman.module').then( m => m.HangmanPageModule)
+  },
+  {
+    path: 'memory-game',
+    loadChildren: () => import('./memory-game/memory-game.module').then( m => m.MemoryGameModule)
   }
 ];
 

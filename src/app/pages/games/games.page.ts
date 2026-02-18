@@ -49,6 +49,16 @@ export class GamesPage implements OnInit {
       color: '#8b5cf6',
       route: '/games/hangman',
       isLocked: false
+    },
+    {
+      id: 'memory-game',
+      name: 'Memory Game',
+      icon: '🧠',
+      description: 'Match pairs to win',
+      badge: '✨ Reflex Challenge',
+      color: '#667eea',
+      route: '/games/memory-game',
+      isLocked: false
     }
   ];
 
