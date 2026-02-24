@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { AchievementsService } from 'src/app/services/achievements-service/achievements-service';
 import { CategoryProgressService } from 'src/app/services/category-progress-service/category-progress-service';
 import { PuzzleService } from 'src/app/services/puzzle-service/puzzle-service';
@@ -119,7 +119,8 @@ export class HomePage implements OnInit {
     private puzzleService: PuzzleService,
     private categoryProgressService: CategoryProgressService,
     private achievementsService: AchievementsService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -206,7 +207,7 @@ export class HomePage implements OnInit {
     });
   }
 
-  startCategoryChallenge(category: PuzzleCategory) {
+  async startCategoryChallenge(category: PuzzleCategory) {
     // Get 5 puzzles of the selected type
     const categoryPuzzles = this.puzzleService.getPuzzlesByType(category.type);
 
@@ -215,7 +216,13 @@ export class HomePage implements OnInit {
     const selectedPuzzles = shuffled.slice(0, 5);
 
     if (selectedPuzzles.length === 0) {
-      alert(`No ${category.type} puzzles available yet!`);
+      const alert = await this.alertController.create({
+        header: 'No Puzzles Available',
+        message: `No ${category.type} puzzles available yet!`,
+        buttons: ['OK'],
+        cssClass: 'custom-alert'
+      });
+      await alert.present();
       return;
     }
 
@@ -231,9 +238,25 @@ export class HomePage implements OnInit {
   }
 
   async showCompletedMessage() {
-    alert(
-      "You've already completed today's challenges! Come back tomorrow for more! 🎉"
-    );
+    const alert = await this.alertController.create({
+      header: '🎉 All Done!',
+      message: "You've already completed today's challenges! Come back tomorrow for more!",
+      buttons: [
+        {
+          text: 'View Stats',
+          handler: () => {
+            this.goToAccuracyStats();
+          }
+        },
+        {
+          text: 'OK',
+          role: 'cancel'
+        }
+      ],
+      cssClass: 'custom-alert'
+    });
+
+    await alert.present();
   }
 
   openAchievements() {
@@ -282,20 +305,45 @@ export class HomePage implements OnInit {
     await toast.present();
   }
 
-  resetProgress() {
-    if (
-      confirm(
-        'Are you sure you want to reset all progress? This cannot be undone.'
-      )
-    ) {
-      this.storageService.resetAllData();
-      this.loadProgress();
-      this.categoryProgressService.resetAllProgress();
-      this.loadCategoryAccuracies();
-      this.loadOverallAccuracy();
-      this.checkAchievements();
-      alert('Progress reset successfully!');
-    }
+  async resetProgress() {
+    const alert = await this.alertController.create({
+      header: '⚠️ Reset Progress',
+      message: 'Are you sure you want to reset all progress? This action cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'alert-button-cancel'
+        },
+        {
+          text: 'Reset',
+          role: 'destructive',
+          cssClass: 'alert-button-danger',
+          handler: () => {
+            this.storageService.resetAllData();
+            this.loadProgress();
+            this.categoryProgressService.resetAllProgress();
+            this.loadCategoryAccuracies();
+            this.loadOverallAccuracy();
+            this.checkAchievements();
+            this.showResetSuccessToast();
+          }
+        }
+      ],
+      cssClass: 'custom-alert'
+    });
+
+    await alert.present();
+  }
+
+  async showResetSuccessToast() {
+    const toast = await this.toastController.create({
+      message: '✅ Progress reset successfully!',
+      duration: 2000,
+      position: 'bottom',
+      color: 'success'
+    });
+    await toast.present();
   }
 
   exportData() {

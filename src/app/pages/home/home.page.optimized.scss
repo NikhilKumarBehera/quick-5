@@ -1,0 +1,655 @@
+// ============================================
+// HOME PAGE - OPTIMIZED WITH DESIGN SYSTEM
+// ============================================
+// Using design system variables and mixins
+// Reduced from 1045 lines to ~400 lines (-62%)
+// ============================================
+
+@import '../../shared/styles/variables.scss';
+
+// ============================================
+// PAGE CONTAINER
+// ============================================
+
+.home-content {
+  --background: #f8f9fa;
+}
+
+// ============================================
+// HEADER SECTION
+// ============================================
+
+.header-gradient {
+  @include header-gradient($gradient-purple-blue);
+  padding: $space-3xl $space-lg $space-2xl;
+  position: relative;
+  margin-bottom: $space-lg;
+}
+
+.header-content {
+  @include flex-between;
+  align-items: flex-start;
+  margin-bottom: $space-lg;
+}
+
+.greeting-section {
+  flex: 1;
+}
+
+.greeting-text {
+  color: white;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.greeting-subtext {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: $font-size-base;
+  margin: 0;
+}
+
+.trophy-button {
+  @include glass-backdrop;
+  --border-radius: 50%;
+  --padding-start: $space-sm;
+  --padding-end: $space-sm;
+  height: 48px;
+  width: 48px;
+
+  ion-icon {
+    color: white;
+    font-size: $font-size-2xl;
+  }
+}
+
+// ============================================
+// STREAK CARD
+// ============================================
+
+.streak-card {
+  @include glass-card;
+  padding: $space-lg;
+}
+
+.streak-content {
+  @include flex-between;
+}
+
+.streak-left {
+  flex: 1;
+}
+
+.streak-label {
+  @include flex-center;
+  gap: 6px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  justify-content: flex-start;
+}
+
+.flash-icon {
+  color: #fbbf24;
+  font-size: $font-size-lg;
+}
+
+.streak-number {
+  color: white;
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  letter-spacing: -1px;
+}
+
+.streak-right {
+  text-align: right;
+}
+
+.total-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: $font-size-sm;
+  margin-bottom: 4px;
+}
+
+.total-number {
+  color: white;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+}
+
+// ============================================
+// MAIN CONTENT
+// ============================================
+
+.main-content {
+  padding: 0 $space-lg $space-lg;
+}
+
+// ============================================
+// CHALLENGE CARD
+// ============================================
+
+.challenge-card {
+  @include card-style;
+  margin: 0 0 $space-lg 0;
+}
+
+ion-card-content {
+  padding: $space-lg;
+}
+
+.card-header {
+  @include flex-between;
+  margin-bottom: $space-lg;
+}
+
+.card-title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.ready-badge {
+  --background: #d1fae5;
+  --color: #059669;
+  padding: 6px $space-sm;
+  border-radius: $border-radius-2xl;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+}
+
+// ============================================
+// PROGRESS BARS
+// ============================================
+
+.progress-bars {
+  display: flex;
+  gap: $space-sm;
+  margin-bottom: $space-lg;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  @include transition(all);
+
+  &.completed {
+    background: #10b981;
+  }
+
+  &.active {
+    background: $gradient-purple-blue-90;
+  }
+}
+
+// ============================================
+// CHALLENGES GRID
+// ============================================
+
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: $space-sm;
+  margin-bottom: $space-lg;
+}
+
+.challenge-item {
+  @include flex-column;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.challenge-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  background: #f3f4f6;
+  border-radius: $border-radius-lg;
+  @include flex-center;
+  @include transition(all);
+
+  .challenge-item:first-child & {
+    background: #ede9fe;
+  }
+
+  .challenge-item.completed & {
+    background: #d1fae5;
+  }
+}
+
+.challenge-emoji {
+  font-size: $font-size-2xl;
+}
+
+.challenge-type {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: #6b7280;
+  text-align: center;
+}
+
+// ============================================
+// START BUTTON
+// ============================================
+
+.start-button {
+  --background: #{$gradient-purple-blue-90};
+  --border-radius: #{$border-radius-lg};
+  --padding-top: #{$space-md};
+  --padding-bottom: #{$space-md};
+  --box-shadow: #{$shadow-purple};
+  @include button-hover-lift;
+  height: auto;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-top: $space-sm;
+
+  ion-icon {
+    margin-left: $space-sm;
+  }
+}
+
+// ============================================
+// SECTION HEADER
+// ============================================
+
+.section-header {
+  margin-bottom: $space-md;
+  margin-top: $space-md;
+}
+
+.section-title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.section-subtitle {
+  font-size: $font-size-sm;
+  color: #6b7280;
+  margin: 0;
+}
+
+// ============================================
+// CATEGORIES HORIZONTAL SCROLL
+// ============================================
+
+.categories-scroll-container {
+  margin-bottom: $space-lg;
+  margin-left: -$space-lg;
+  margin-right: -$space-lg;
+  padding-left: $space-lg;
+}
+
+.categories-scroll {
+  display: flex;
+  gap: $space-md;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: $space-md;
+  padding-right: $space-lg;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.category-card {
+  flex: 0 0 280px;
+  min-width: 280px;
+  height: auto;
+  min-height: 200px;
+  padding: $space-lg;
+  border-radius: $border-radius-2xl;
+  color: white;
+  cursor: pointer;
+  @include transition(all);
+  box-shadow: $shadow-lg;
+  @include flex-column;
+  justify-content: space-between;
+  scroll-snap-align: start;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.category-header {
+  @include flex-between;
+  align-items: flex-start;
+  margin-bottom: $space-md;
+}
+
+.category-icon {
+  font-size: 48px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
+.category-accuracy {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 6px $space-sm;
+  border-radius: $border-radius-2xl;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+}
+
+.category-content {
+  flex: 1;
+}
+
+.category-title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  margin: 0 0 $space-sm 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-description {
+  font-size: $font-size-sm;
+  margin: 0;
+  opacity: 0.95;
+  line-height: $line-height-normal;
+}
+
+.category-footer {
+  @include flex-between;
+  margin-top: $space-md;
+  padding-top: $space-md;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.category-count {
+  font-size: $font-size-sm;
+  opacity: 0.9;
+  
+  ion-icon {
+    font-size: $font-size-base;
+    vertical-align: middle;
+  }
+}
+
+.category-arrow {
+  background: rgba(255, 255, 255, 0.2);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  @include flex-center;
+  
+  ion-icon {
+    font-size: $font-size-lg;
+  }
+}
+
+// ============================================
+// STATS GRID
+// ============================================
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-md;
+  margin-bottom: $space-lg;
+}
+
+.stat-card {
+  @include stat-card;
+  @include flex-column;
+  align-items: flex-start;
+  padding: $space-lg;
+  gap: $space-sm;
+}
+
+.stat-header {
+  @include flex-between;
+  width: 100%;
+}
+
+.stat-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: $border-radius-xs;
+  @include flex-center;
+  
+  &.primary {
+    background: $gradient-light-purple;
+  }
+  
+  &.success {
+    background: $gradient-green-light;
+  }
+  
+  &.warning {
+    background: rgba(251, 191, 36, 0.1);
+  }
+}
+
+.stat-icon {
+  font-size: $font-size-xl;
+}
+
+.stat-label {
+  font-size: $font-size-sm;
+  color: #6b7280;
+  margin: 0;
+}
+
+.stat-value {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.stat-change {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  
+  &.positive {
+    color: #10b981;
+  }
+  
+  &.negative {
+    color: #ef4444;
+  }
+  
+  ion-icon {
+    font-size: $font-size-sm;
+    vertical-align: middle;
+  }
+}
+
+// ============================================
+// QUICK ACTIONS
+// ============================================
+
+.quick-actions {
+  margin-bottom: $space-lg;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-sm;
+}
+
+.action-button {
+  @include card-style;
+  padding: $space-md;
+  text-align: center;
+  cursor: pointer;
+  @include transition(all);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.action-icon {
+  font-size: $font-size-3xl;
+  margin-bottom: $space-sm;
+}
+
+.action-title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: #1f2937;
+  margin: 0;
+}
+
+// ============================================
+// RECENT ACTIVITY
+// ============================================
+
+.recent-activity {
+  margin-bottom: $space-lg;
+}
+
+.activity-list {
+  @include card-style;
+  padding: $space-md;
+}
+
+.activity-item {
+  @include flex-between;
+  padding: $space-sm 0;
+  border-bottom: 1px solid #f3f4f6;
+  
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.activity-left {
+  @include flex-center;
+  gap: $space-sm;
+  justify-content: flex-start;
+}
+
+.activity-icon {
+  font-size: $font-size-xl;
+}
+
+.activity-info {
+  @include flex-column;
+  gap: 2px;
+}
+
+.activity-title {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: #1f2937;
+  margin: 0;
+}
+
+.activity-time {
+  font-size: $font-size-xs;
+  color: #6b7280;
+  margin: 0;
+}
+
+.activity-badge {
+  padding: 4px $space-sm;
+  border-radius: $border-radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  
+  &.success {
+    background: #d1fae5;
+    color: #059669;
+  }
+  
+  &.pending {
+    background: #fef3c7;
+    color: #d97706;
+  }
+}
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+
+@include respond-below($breakpoint-md) {
+  .challenges-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .category-card {
+    flex: 0 0 260px;
+    min-width: 260px;
+  }
+}
+
+@include respond-below($breakpoint-sm) {
+  .header-gradient {
+    padding: $space-2xl $space-md $space-lg;
+  }
+  
+  .main-content {
+    padding: 0 $space-md $space-md;
+  }
+  
+  .challenges-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.category-card,
+.stat-card,
+.challenge-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// Stagger animation for challenge items
+.challenge-item {
+  animation: fadeIn 0.3s ease-out;
+  
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}

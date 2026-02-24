@@ -1,0 +1,112 @@
+// ============================================
+// PAGE HEADER COMPONENT - REUSABLE
+// ============================================
+@import '../../styles/variables.scss';
+
+.page-header {
+  position: relative;
+  padding: $space-2xl $space-md $space-lg;
+  color: white;
+  
+  // Gradient variants
+  &.gradient-purple-blue {
+    background: $gradient-purple-blue;
+    box-shadow: $shadow-purple;
+  }
+  
+  &.gradient-success {
+    background: $gradient-success-green;
+    box-shadow: $shadow-success;
+  }
+  
+  &.gradient-warning {
+    background: $gradient-warning-orange;
+    box-shadow: $shadow-orange;
+  }
+  
+  &.gradient-primary {
+    background: $gradient-primary;
+    box-shadow: $shadow-purple-md;
+  }
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.header-top {
+  @include flex-between;
+  align-items: flex-start;
+  margin-bottom: $space-md;
+}
+
+.back-button,
+.action-button {
+  @include glass-backdrop;
+  --color: white;
+  --padding-start: $space-sm;
+  --padding-end: $space-sm;
+  --border-radius: 50%;
+  margin: 0;
+  width: 40px;
+  height: 40px;
+
+  ion-icon {
+    font-size: $font-size-xl;
+  }
+}
+
+.header-text {
+  flex: 1;
+  padding: 0 $space-sm;
+}
+
+.header-title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  margin: 0;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-subtitle {
+  font-size: $font-size-sm;
+  margin: 4px 0 0 0;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.header-body {
+  margin-top: $space-md;
+}
+
+.header-curve {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  background: var(--ion-background-color, #f8f9fa);
+  border-radius: $border-radius-4xl $border-radius-4xl 0 0;
+  z-index: 1;
+}
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+
+@include respond-below($breakpoint-sm) {
+  .page-header {
+    padding: $space-xl $space-sm $space-md;
+  }
+
+  .header-title {
+    font-size: $font-size-xl;
+  }
+
+  .back-button,
+  .action-button {
+    width: 36px;
+    height: 36px;
+  }
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { Puzzle } from 'src/app/services/puzzle-service/puzzle-service';
 import { SoundService } from 'src/app/services/sound-service/sound-service';
 import { StorageService } from 'src/app/services/storage-service/storage-service';
@@ -24,7 +25,8 @@ export class ResultsPage implements OnInit {
   constructor(
     private router: Router,
     private storageService: StorageService,
-    private soundService: SoundService
+    private soundService: SoundService,
+    private toastController: ToastController
   ) {
     // Get results from navigation state
     const navigation = this.router.getCurrentNavigation();
@@ -94,7 +96,7 @@ export class ResultsPage implements OnInit {
     } else {
       // Fallback: Copy to clipboard
       this.copyToClipboard(text);
-      alert('Results copied to clipboard! 📋');
+      await this.showCopiedToast();
     }
   }
 
@@ -105,6 +107,16 @@ export class ResultsPage implements OnInit {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
+  }
+
+  private async showCopiedToast() {
+    const toast = await this.toastController.create({
+      message: '📋 Results copied to clipboard!',
+      duration: 2000,
+      position: 'bottom',
+      color: 'success'
+    });
+    await toast.present();
   }
 
   // View detailed results (optional feature)

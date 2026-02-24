@@ -1,0 +1,165 @@
+// ============================================
+// STAT CARD COMPONENT - REUSABLE
+// ============================================
+@import '../../styles/variables.scss';
+
+.stat-card {
+  @include stat-card;
+  @include flex-column;
+  align-items: flex-start;
+  gap: $space-md;
+  @include transition(all);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+// ============================================
+// HEADER
+// ============================================
+
+.stat-header {
+  width: 100%;
+}
+
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: $border-radius-sm;
+  @include flex-center;
+  margin-bottom: $space-sm;
+
+  &.color-primary {
+    background: $gradient-light-purple;
+  }
+
+  &.color-success {
+    background: $gradient-green-light;
+  }
+
+  &.color-warning {
+    background: rgba(251, 191, 36, 0.1);
+  }
+
+  &.color-danger {
+    background: rgba(239, 68, 68, 0.1);
+  }
+}
+
+.stat-icon {
+  font-size: $font-size-2xl;
+
+  .color-primary & {
+    color: $color-primary;
+  }
+
+  .color-success & {
+    color: #10b981;
+  }
+
+  .color-warning & {
+    color: #f59e0b;
+  }
+
+  .color-danger & {
+    color: #ef4444;
+  }
+}
+
+.stat-label {
+  font-size: $font-size-sm;
+  color: #6b7280;
+  margin: 0;
+  font-weight: $font-weight-medium;
+}
+
+// ============================================
+// BODY
+// ============================================
+
+.stat-body {
+  width: 100%;
+}
+
+.stat-value {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: #1f2937;
+  margin: 0 0 $space-xs 0;
+  line-height: 1;
+}
+
+.stat-change {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  margin: 0;
+  @include flex-center;
+  justify-content: flex-start;
+  gap: 4px;
+
+  &.positive {
+    color: #10b981;
+  }
+
+  &.negative {
+    color: #ef4444;
+  }
+
+  ion-icon {
+    font-size: $font-size-base;
+  }
+}
+
+// ============================================
+// SIZE VARIANTS
+// ============================================
+
+.stat-card.size-small {
+  padding: $space-md;
+
+  .stat-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+
+  .stat-icon {
+    font-size: $font-size-xl;
+  }
+
+  .stat-value {
+    font-size: $font-size-xl;
+  }
+}
+
+.stat-card.size-large {
+  padding: $space-xl;
+
+  .stat-icon-wrapper {
+    width: 56px;
+    height: 56px;
+  }
+
+  .stat-icon {
+    font-size: $font-size-3xl;
+  }
+
+  .stat-value {
+    font-size: $font-size-4xl;
+  }
+}
+
+// ============================================
+// RESPONSIVE DESIGN
+// ============================================
+
+@include respond-below($breakpoint-sm) {
+  .stat-card {
+    padding: $space-md;
+  }
+
+  .stat-value {
+    font-size: $font-size-2xl;
+  }
+}

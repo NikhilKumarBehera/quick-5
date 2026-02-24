@@ -1,0 +1,34 @@
+<div class="page-header" [ngClass]="getGradientClass()">
+  <div class="header-content">
+    <div class="header-top">
+      <ion-button 
+        *ngIf="showBack" 
+        fill="clear" 
+        class="back-button"
+        (click)="onBackClick()">
+        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+      </ion-button>
+
+      <div class="header-text">
+        <h1 class="header-title">{{ title }}</h1>
+        <p *ngIf="subtitle" class="header-subtitle">{{ subtitle }}</p>
+      </div>
+
+      <ion-button 
+        *ngIf="showAction" 
+        fill="clear" 
+        class="action-button"
+        (click)="onActionClick()">
+        <ion-icon slot="icon-only" [name]="actionIcon"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Content projection for custom header content (stats, etc.) -->
+    <div class="header-body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+
+  <!-- Curved bottom edge -->
+  <div class="header-curve"></div>
+</div>

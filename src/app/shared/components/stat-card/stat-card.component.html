@@ -1,0 +1,18 @@
+<div class="stat-card" [ngClass]="['size-' + size, 'color-' + color]">
+  <div class="stat-header">
+    <div class="stat-icon-wrapper" [ngClass]="'color-' + color">
+      <ion-icon [name]="icon" class="stat-icon"></ion-icon>
+    </div>
+    <p class="stat-label">{{ label }}</p>
+  </div>
+
+  <div class="stat-body">
+    <h2 class="stat-value">{{ value }}</h2>
+    <p *ngIf="change" class="stat-change" [ngClass]="changeType">
+      <ion-icon 
+        [name]="changeType === 'positive' ? 'trending-up' : 'trending-down'">
+      </ion-icon>
+      {{ change }}
+    </p>
+  </div>
+</div>
