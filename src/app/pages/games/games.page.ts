@@ -65,15 +65,6 @@ export class GamesPage implements OnInit {
   // Upcoming Games
   upcomingGames: Game[] = [
     {
-      id: 'memory-match',
-      name: 'Memory Match',
-      icon: '🧠',
-      description: 'Match pairs to win',
-      color: '#3b82f6',
-      route: '',
-      isLocked: true
-    },
-    {
       id: 'math-sprint',
       name: 'Math Sprint',
       icon: '➕',

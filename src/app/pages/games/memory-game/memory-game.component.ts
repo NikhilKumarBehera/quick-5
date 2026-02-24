@@ -8,6 +8,7 @@ import {
 import { Location } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import { interval, Subscription } from 'rxjs';
+import { SoundService } from 'src/app/services/sound-service/sound-service';
 
 // ─── Interfaces ────────────────────────────────────────────────────────────────
 
@@ -122,7 +123,8 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private location: Location,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private soundService: SoundService
   ) {}
 
   ngOnInit(): void {
@@ -354,12 +356,18 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
     const card2 = this.cards.find((c) => c.id === id2)!;
 
     if (card1.emoji === card2.emoji) {
+      // ✅ Correct pair - play success sound
+      this.soundService.playSuccessSound();
+      
       card1.isMatched = card2.isMatched = true;
       this.matchedPairs++;
       if (this.matchedPairs === this.EMOJI_PAIRS.length) {
         this.completeGame();
       }
     } else {
+      // ❌ Wrong pair - play error sound
+      this.soundService.playErrorSound();
+      
       card1.isShaking = card2.isShaking = true;
       setTimeout(() => {
         card1.isShaking = card2.isShaking = false;
@@ -377,6 +385,9 @@ export class MemoryGameComponent implements OnInit, OnDestroy {
     this.gameTimerSub?.unsubscribe();
     this.gameState = 'completed';
     this.lastScore = this.calculateScore();
+
+    // 🎉 Play game complete sound
+    this.soundService.playChallengeCompleteSound();
 
     // ── Update persistent stats ──
     const stats = this.allStats[this.difficulty];
