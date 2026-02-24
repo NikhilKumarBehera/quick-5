@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { MathPuzzles } from './constants/math-puzzles';
-import { MemoryPuzzles } from './constants/memory-puzzles';
+import { CodeCrackerPuzzles } from './constants/code-cracker-puzzles';
 import { LogicPuzzles } from './constants/logic-puzzles';
 import { RiddlePuzzles } from './constants/riddle-puzzles';
 import { PatternPuzzles } from './constants/pattern-puzzles';
 
 export interface Puzzle {
   id: string;
-  type: 'Math' | 'Memory' | 'Logic' | 'Riddle' | 'Pattern';
+  type: 'Math' | 'Code Cracker' | 'Logic' | 'Riddle' | 'Pattern';
   icon: string;
   difficulty: 'easy' | 'medium' | 'hard';
   question: string;
@@ -23,7 +23,7 @@ export class PuzzleService {
   // Define the Puzzle interface (assuming this is already defined in your project)
   private puzzleBank: Puzzle[] = [
     ...MathPuzzles,
-    ...MemoryPuzzles,
+    ...CodeCrackerPuzzles,
     ...LogicPuzzles,
     ...RiddlePuzzles,
     ...PatternPuzzles,
@@ -35,7 +35,7 @@ export class PuzzleService {
    * Get daily set of 5 puzzles (one from each category)
    */
   getDailyPuzzles(): Puzzle[] {
-    const categories = ['Math', 'Memory', 'Logic', 'Riddle', 'Pattern'];
+    const categories = ['Math', 'Code Cracker', 'Logic', 'Riddle', 'Pattern'];
     const dailyPuzzles: Puzzle[] = [];
 
     categories.forEach((category) => {

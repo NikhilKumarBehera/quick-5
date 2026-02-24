@@ -62,11 +62,11 @@ export const PUZZLE_CATEGORIES = {
     color: 'primary',
     gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   },
-  MEMORY: {
-    label: 'Memory',
-    icon: '🧠',
+  CODE_CRACKER: {
+    label: 'Code Cracker',
+    icon: '🔐',
     color: 'secondary',
-    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   },
   LOGIC: {
     label: 'Logic',

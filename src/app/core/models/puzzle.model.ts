@@ -17,7 +17,7 @@ export interface Puzzle {
 
 export enum PuzzleCategory {
   MATH = 'math',
-  MEMORY = 'memory',
+  CODE_CRACKER = 'code-cracker',
   LOGIC = 'logic',
   RIDDLE = 'riddle',
   WORD = 'word',

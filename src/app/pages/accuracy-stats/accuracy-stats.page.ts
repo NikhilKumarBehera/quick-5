@@ -66,8 +66,8 @@ export class AccuracyStatsPage implements OnInit, AfterViewInit {
     this.overallAccuracy = this.categoryProgressService.getOverallAccuracy();
 
     // Load category stats
-    const categories = ['Math', 'Memory', 'Logic', 'Riddle', 'Pattern'];
-    const icons = ['🧮', '🧠', '🎯', '💡', '🔷'];
+    const categories = ['Math', 'Code Cracker', 'Logic', 'Riddle', 'Pattern'];
+    const icons = ['🧮', '🔐', '🎯', '💡', '🔷'];
 
     this.categoryStats = categories.map((category, index) => {
       const progress =
