@@ -41,9 +41,11 @@ ion-content.memory-content {
 
 .memory-toolbar {
   --background: var(--c-purple-grad) !important;
-  // NO extra bottom padding — header just needs normal height.
-  // The rounded white bottom edge is purely decorative via ::after.
-  padding: 10px 12px 16px !important;
+    padding: 40px 16px 50px; // Increased bottom padding for white shelf
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: padding 0.3s ease;
 
   // Decorative rounded white shelf at bottom of header
   &::after {
