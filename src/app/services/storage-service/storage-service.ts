@@ -78,11 +78,24 @@ export class StorageService {
     if (!progress) return;
 
     const today = new Date().toDateString();
-    const lastCompleted = new Date(progress.lastCompleted).toDateString();
     const yesterday = new Date(Date.now() - 86400000).toDateString();
 
+    // Handle empty lastCompleted (new user or reset)
+    if (!progress.lastCompleted || progress.lastCompleted === '') {
+      // First time completing
+      progress.streak = 1;
+      progress.lastCompleted = today;
+      if (progress.streak > progress.bestStreak) {
+        progress.bestStreak = progress.streak;
+      }
+      this.saveUserProgress(progress);
+      return;
+    }
+
+    const lastCompleted = new Date(progress.lastCompleted).toDateString();
+
     if (lastCompleted === today) {
-      // Already completed today
+      // Already completed today, don't update streak
       return;
     } else if (lastCompleted === yesterday) {
       // Continuing streak
@@ -156,8 +169,9 @@ export class StorageService {
     // Calculate level based on XP (100 XP per level)
     progress.level = Math.floor(progress.totalXP / 100) + 1;
 
-    this.updateStreak();
+    // Save progress first, then update streak (which will save again with updated streak)
     this.saveUserProgress(progress);
+    this.updateStreak();
   }
 
   /**
@@ -165,7 +179,9 @@ export class StorageService {
    */
   isCompletedToday(): boolean {
     const progress = this.getUserProgress();
-    if (!progress) return false;
+    if (!progress || !progress.lastCompleted || progress.lastCompleted === '') {
+      return false;
+    }
 
     const today = new Date().toDateString();
     const lastCompleted = new Date(progress.lastCompleted).toDateString();

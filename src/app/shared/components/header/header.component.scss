@@ -1,0 +1,200 @@
+// Header Component Styles
+// Used across pages: Home, Challenge, Results
+
+@import '../../styles/variables.scss';
+
+:host {
+  display: block;
+}
+
+// Gradient backgrounds
+.header-gradient {
+  padding: 48px 24px 32px;
+  border-radius: 0 0 32px 32px;
+  position: relative;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+
+  // Variant: Purple to Blue (default)
+  &.gradient-purple-blue {
+    background: linear-gradient(135deg, #9333ea 0%, #3b82f6 100%);
+    box-shadow: 0 10px 40px rgba(147, 51, 234, 0.3);
+  }
+
+  // Variant: Green
+  &.gradient-green {
+    background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+  }
+
+  // Variant: Orange
+  &.gradient-orange {
+    background: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+    box-shadow: 0 10px 40px rgba(249, 115, 22, 0.3);
+  }
+
+  // Variant: Pink
+  &.gradient-pink {
+    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+    box-shadow: 0 10px 40px rgba(236, 72, 153, 0.3);
+  }
+
+  &.scrolled {
+    padding: 16px 24px;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.greeting-section {
+  flex: 1;
+}
+
+.greeting-text {
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.greeting-subtext {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  margin: 0;
+  transition: opacity 0.3s ease;
+
+  &.hidden {
+    opacity: 0;
+    height: 0;
+  }
+}
+
+.right-button {
+  --background: rgba(255, 255, 255, 0.2);
+  --border-radius: 50%;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  height: 48px;
+  width: 48px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    --background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+  }
+
+  ion-icon {
+    color: white;
+    font-size: 24px;
+  }
+}
+
+// Streak Card
+.streak-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 20px;
+  transition: all 0.3s ease;
+
+  &.hidden {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.streak-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.streak-left {
+  flex: 1;
+}
+
+.streak-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.flash-icon {
+  color: #fbbf24;
+  font-size: 18px;
+  animation: pulse 2s infinite;
+}
+
+.streak-number {
+  color: white;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.streak-right {
+  text-align: right;
+  min-width: 120px;
+}
+
+.total-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.total-number {
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .header-gradient {
+    padding: 40px 16px 24px;
+  }
+
+  .greeting-text {
+    font-size: 24px;
+  }
+
+  .streak-number {
+    font-size: 28px;
+  }
+
+  .streak-card {
+    padding: 16px;
+  }
+}

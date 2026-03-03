@@ -1,0 +1,117 @@
+// Button Group Component Styles
+
+@import '../../styles/variables.scss';
+
+:host {
+  display: block;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+
+  // Layouts
+  &.layout-horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  &.layout-vertical {
+    flex-direction: column;
+  }
+
+  &.layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  // Sizes
+  &.size-small {
+    ion-button {
+      --padding-start: 12px;
+      --padding-end: 12px;
+      font-size: 12px;
+
+      ion-icon {
+        font-size: 16px;
+      }
+    }
+  }
+
+  &.size-medium {
+    ion-button {
+      --padding-start: 16px;
+      --padding-end: 16px;
+      font-size: 14px;
+
+      ion-icon {
+        font-size: 18px;
+      }
+    }
+  }
+
+  &.size-large {
+    ion-button {
+      --padding-start: 20px;
+      --padding-end: 20px;
+      font-size: 16px;
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+.action-button {
+  --border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+
+  // Variant: Solid (default)
+  &.variant-solid {
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &:hover:not(:disabled) {
+      --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  // Variant: Outline
+  &.variant-outline {
+    border: 2px solid currentColor;
+  }
+
+  // Variant: Clear
+  &.variant-clear {
+    color: currentColor;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .button-group {
+    &.layout-horizontal {
+      flex-direction: column;
+    }
+
+    &.layout-grid {
+      grid-template-columns: 1fr;
+    }
+
+    gap: 8px;
+  }
+}

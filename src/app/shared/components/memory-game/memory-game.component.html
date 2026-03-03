@@ -1,0 +1,85 @@
+<div class="memory-game-container" [ngClass]="getGameStateClass()">
+  <!-- Header with Stats -->
+  <div class="game-header">
+    <h2>🧠 Memory Game</h2>
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="stat-label">Moves</span>
+        <span class="stat-value">{{ moves }}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Matched</span>
+        <span class="stat-value">{{ matchedPairs }}/8</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Accuracy</span>
+        <span class="stat-value">{{ getAccuracy() }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Phase Overlay -->
+  <div class="preview-overlay" *ngIf="gameState === 'showing'">
+    <div class="preview-content">
+      <h3>Remember the cards!</h3>
+      <div class="timer" [style.animation]="'bounce 1s ease-in-out infinite'">
+        {{ previewTimeLeft.toFixed(1) }}s
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Board -->
+  <div class="game-board">
+    <button
+      *ngFor="let card of cards; trackBy: trackByCardId"
+      class="card"
+      [class.flipped]="card.isFlipped"
+      [class.matched]="card.isMatched"
+      [class.shaking]="card.isShaking"
+      (click)="onCardClick(card)"
+      [disabled]="gameState !== 'playing' || isGameLocked || card.isMatched"
+      [attr.aria-label]="'Card ' + card.id + (card.isMatched ? ' matched' : '')"
+      [attr.aria-pressed]="card.isFlipped">
+      <div class="card-front">?</div>
+      <div class="card-back">{{ card.emoji }}</div>
+    </button>
+  </div>
+
+  <!-- Completion Modal -->
+  <div class="completion-overlay" *ngIf="gameState === 'completed'">
+    <div class="completion-card">
+      <h2>🎉 Game Complete!</h2>
+      
+      <div class="score-display">
+        <div class="score-item">
+          <span class="score-label">Total Moves</span>
+          <span class="score-number">{{ moves }}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Accuracy</span>
+          <span class="score-number">{{ getAccuracy() }}%</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Pairs Found</span>
+          <span class="score-number">{{ matchedPairs }}/8</span>
+        </div>
+      </div>
+
+      <!-- Star Rating -->
+      <div class="star-rating">
+        <span *ngIf="getAccuracy() >= 95" class="star">⭐</span>
+        <span *ngIf="getAccuracy() >= 95" class="star">⭐</span>
+        <span *ngIf="getAccuracy() >= 95" class="star">⭐</span>
+        
+        <span *ngIf="getAccuracy() >= 85 && getAccuracy() < 95" class="star">⭐</span>
+        <span *ngIf="getAccuracy() >= 85 && getAccuracy() < 95" class="star">⭐</span>
+        
+        <span *ngIf="getAccuracy() >= 70 && getAccuracy() < 85" class="star">⭐</span>
+      </div>
+
+      <button class="restart-btn" (click)="restartGame()">
+        Play Again
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,397 @@
+/**
+ * Color Palette
+ * Primary, secondary, and accent colors
+ */
+
+// Primary Colors
+$color-primary: #667eea;
+$color-primary-light: #8a98f0;
+$color-primary-dark: #4a5ec4;
+
+// Secondary Colors
+$color-secondary: #f5576c;
+$color-secondary-light: #f77b8d;
+$color-secondary-dark: #d43e52;
+
+// Success, Warning, Danger
+$color-success: #30cfd0;
+$color-warning: #fa709a;
+$color-danger: #f85151;
+$color-info: #4facfe;
+
+// Neutral Colors
+$color-white: #ffffff;
+$color-black: #000000;
+$color-light-gray: #f5f5f5;
+$color-medium-gray: #d0d0d0;
+$color-dark-gray: #666666;
+$color-text-dark: #333333;
+$color-text-light: #999999;
+
+// Gradients
+// Primary theme gradients
+$gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+$gradient-success: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+$gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+
+// Common UI gradients (used throughout app)
+$gradient-purple-blue: linear-gradient(135deg, #9333ea 0%, #3b82f6 100%);
+$gradient-purple-blue-90: linear-gradient(90deg, #9333ea 0%, #3b82f6 100%);
+$gradient-success-green: linear-gradient(135deg, #10b981 0%, #059669 100%);
+$gradient-success-green-90: linear-gradient(90deg, #10b981 0%, #059669 100%);
+$gradient-success-green-dark: linear-gradient(90deg, #059669 0%, #047857 100%);
+$gradient-success-teal: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+$gradient-error-red: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+$gradient-error-red-light: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+$gradient-warning-orange: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+$gradient-warning-orange-alt: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+$gradient-yellow: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+$gradient-yellow-light: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+$gradient-yellow-lighter: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+$gradient-info-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+$gradient-info-blue-90: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+$gradient-info-blue-180: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+$gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+$gradient-purple-90: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 100%);
+$gradient-purple-180: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+$gradient-pink: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+$gradient-gray: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+$gradient-gray-dark: linear-gradient(180deg, #6b7280 0%, #9ca3af 100%);
+$gradient-green-light: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+$gradient-green-success: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+
+// Subtle/Light gradients
+$gradient-light-purple: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+$gradient-light-purple-bg: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+$gradient-light-purple-ultra: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+$gradient-light-green: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.05));
+$gradient-light-red: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(220, 38, 38, 0.05));
+
+// Page background gradients
+$gradient-bg-light: linear-gradient(135deg, #f9fafb 0%, #ede9fe 100%);
+$gradient-bg-success: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+
+// Special effect gradients
+$gradient-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+$gradient-fade-gray: linear-gradient(180deg, transparent 0%, #6b7280 100%);
+
+/**
+ * Typography
+ * Font sizes, weights, and line heights
+ */
+
+// Font Families
+$font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-mono: 'Courier New', Courier, monospace;
+
+// Font Sizes
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-base: 1rem; // 16px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 1.875rem; // 30px
+$font-size-4xl: 2.25rem; // 36px
+
+// Font Weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Line Heights
+$line-height-tight: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+/**
+ * Spacing
+ * Consistent spacing scale using 4px base unit
+ */
+
+$space-xs: 0.25rem; // 4px
+$space-sm: 0.5rem; // 8px
+$space-md: 1rem; // 16px
+$space-lg: 1.5rem; // 24px
+$space-xl: 2rem; // 32px
+$space-2xl: 2.5rem; // 40px
+$space-3xl: 3rem; // 48px
+$space-4xl: 4rem; // 64px
+
+/**
+ * Border Radius
+ * Rounded corner sizes
+ */
+
+$border-radius-none: 0;
+$border-radius-xs: 0.625rem; // 10px
+$border-radius-sm: 0.75rem; // 12px
+$border-radius-md: 0.875rem; // 14px
+$border-radius-lg: 1rem; // 16px
+$border-radius-xl: 1.125rem; // 18px
+$border-radius-2xl: 1.25rem; // 20px
+$border-radius-3xl: 1.5rem; // 24px
+$border-radius-4xl: 2rem; // 32px
+$border-radius-full: 9999px;
+
+/**
+ * Shadows
+ * Elevation shadows
+ */
+
+$shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.12);
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+$shadow-md-alt: 0 4px 16px rgba(0, 0, 0, 0.06);
+$shadow-md-strong: 0 4px 20px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+$shadow-lg-alt: 0 8px 30px rgba(0, 0, 0, 0.08);
+$shadow-lg-strong: 0 8px 32px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 10px 40px rgba(0, 0, 0, 0.15);
+$shadow-2xl: 0 24px 60px rgba(0, 0, 0, 0.22);
+
+// Colored shadows for specific components
+$shadow-purple: 0 10px 40px rgba(147, 51, 234, 0.3);
+$shadow-purple-md: 0 6px 20px rgba(102, 126, 234, 0.35);
+$shadow-purple-lg: 0 8px 24px rgba(139, 92, 246, 0.4);
+$shadow-success: 0 8px 24px rgba(16, 185, 129, 0.3);
+$shadow-success-md: 0 6px 20px rgba(16, 185, 129, 0.3);
+$shadow-success-lg: 0 4px 12px rgba(16, 185, 129, 0.4);
+$shadow-yellow: 0 4px 12px rgba(251, 191, 36, 0.4);
+$shadow-yellow-alt: 0 4px 12px rgba(252, 211, 77, 0.3);
+$shadow-orange: 0 6px 20px rgba(245, 158, 11, 0.4);
+$shadow-error: 0 4px 12px rgba(239, 68, 68, 0.4);
+$shadow-blue: 0 4px 12px rgba(59, 130, 246, 0.4);
+$shadow-green: 0 8px 24px rgba(74, 222, 128, 0.5);
+
+/**
+ * Breakpoints
+ * Responsive design breakpoints
+ */
+
+$breakpoint-xs: 320px;
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-2xl: 1400px;
+
+/**
+ * Transitions
+ * Animation timing and easing
+ */
+
+$transition-fast: 150ms;
+$transition-base: 300ms;
+$transition-slow: 500ms;
+
+$easing-ease-in: cubic-bezier(0.4, 0, 1, 1);
+$easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
+$easing-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$easing-ease-back: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+/**
+ * Z-Index Scale
+ * Layering management
+ */
+
+$z-index-dropdown: 100;
+$z-index-sticky: 200;
+$z-index-fixed: 300;
+$z-index-modal-backdrop: 400;
+$z-index-modal: 500;
+$z-index-popover: 600;
+$z-index-tooltip: 700;
+
+/**
+ * Mixins
+ * Reusable style snippets
+ */
+
+// Flexbox utilities
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Text utilities
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-ellipsis($lines: 1) {
+  @if $lines == 1 {
+    @include text-truncate;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Responsive utilities
+@mixin respond-to($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  @media (max-width: ($breakpoint - 1)) {
+    @content;
+  }
+}
+
+// Gradient backgrounds
+@mixin gradient-bg($gradient) {
+  background: $gradient;
+  background-attachment: fixed;
+}
+
+// Smooth transition
+@mixin transition($property: all, $duration: $transition-base, $easing: $easing-ease-in-out) {
+  transition: $property $duration $easing;
+}
+
+// Shadow elevation
+@mixin elevation($level: 1) {
+  @if $level == 1 {
+    box-shadow: $shadow-sm;
+  } @else if $level == 2 {
+    box-shadow: $shadow-md;
+  } @else if $level == 3 {
+    box-shadow: $shadow-lg;
+  } @else if $level == 4 {
+    box-shadow: $shadow-xl;
+  } @else if $level == 5 {
+    box-shadow: $shadow-2xl;
+  }
+}
+
+// Absolute centering
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Visual focus state
+@mixin focus-ring($color: $color-primary, $width: 2px, $offset: 2px) {
+  outline: $width solid $color;
+  outline-offset: $offset;
+}
+
+// Disabled state
+@mixin disabled-state {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/**
+ * Common UI Pattern Mixins
+ * Reusable component styles
+ */
+
+// Standard card style (used across multiple pages)
+@mixin card-style {
+  background: white;
+  border-radius: $border-radius-3xl;
+  box-shadow: $shadow-md-strong;
+  border: 1px solid #f0f0f0;
+}
+
+// Glass morphism card (used in headers, overlays)
+@mixin glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: $border-radius-2xl;
+}
+
+// Header with gradient (common pattern)
+@mixin header-gradient($gradient: $gradient-purple-blue) {
+  background: $gradient;
+  border-radius: 0 0 $border-radius-4xl $border-radius-4xl;
+  box-shadow: $shadow-purple;
+}
+
+// Stat card pattern
+@mixin stat-card {
+  @include flex-between;
+  padding: $space-md;
+  border-radius: $border-radius-lg;
+  background: white;
+  box-shadow: $shadow-sm;
+}
+
+// Button hover effect
+@mixin button-hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Glassmorphism backdrop
+@mixin glass-backdrop {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+// Text gradient
+@mixin text-gradient($gradient: $gradient-purple-blue) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Loading shimmer animation
+@mixin shimmer-animation {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: $gradient-shimmer;
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    left: 100%;
+  }
+}

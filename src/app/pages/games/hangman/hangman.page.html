@@ -125,8 +125,8 @@
         </ion-button>
       </div>
 
-      <!-- Hint Text -->
-      <div class="hint-text" *ngIf="showHint">
+      <!-- Hint Text - Always in DOM to prevent layout shift -->
+      <div class="hint-text" [class.visible]="showHint">
         <ion-icon name="bulb"></ion-icon>
         {{ currentWord.hint }}
       </div>

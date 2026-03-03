@@ -1,0 +1,275 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="memory-toolbar" [class.scrolled]="isScrolled">
+    <ion-buttons slot="start">
+      <ion-button class="back-button" (click)="onBackPressed()" fill="clear">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title class="memory-title">
+      <span class="title-icon">🧠</span>
+      <span class="title-text">Memory Game</span>
+    </ion-title>
+
+    <ion-buttons slot="end" *ngIf="gameState === 'playing'">
+      <div class="score-badge-header">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>{{ formatTime(gameTimeElapsed) }}</span>
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="memory-content" (ionScroll)="onScroll($event)">
+
+  <!-- ══════════════════════════════════════════════════════════ MENU STATE -->
+  <div class="game-view" *ngIf="gameState === 'menu'">
+    <div class="menu-container">
+
+      <div class="game-title">
+        <p>Memorise the cards, then find all matching pairs!</p>
+      </div>
+
+      <!-- ── Difficulty cards with best time badges ── -->
+      <div class="difficulty-section">
+        <h2>Select Difficulty</h2>
+        <div class="difficulty-grid">
+          <button *ngFor="let option of difficultyOptions" class="difficulty-card" (click)="startGame(option.value)"
+            [attr.aria-label]="'Play ' + option.label + ' difficulty'">
+
+            <div class="difficulty-icon">{{ option.icon }}</div>
+            <div class="difficulty-name">{{ option.label }}</div>
+            <div class="difficulty-desc">{{ option.description }}</div>
+
+            <!-- Best time badge — only shown once the user has completed that level -->
+            <div class="best-time-badge" *ngIf="allStats[option.value].bestTime !== null">
+              <ion-icon name="trophy-outline"></ion-icon>
+              <span>{{ formatTime(allStats[option.value].bestTime!) }}</span>
+            </div>
+
+            <!-- Streak pip — show fire if current streak > 0 -->
+            <div class="streak-pip" *ngIf="allStats[option.value].currentStreak > 0">
+              🔥 {{ allStats[option.value].currentStreak }}
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Overall stats bar (only shown after at least one game) ── -->
+      <div class="global-stats-row"
+        *ngIf="allStats.easy.gamesPlayed + allStats.medium.gamesPlayed + allStats.hard.gamesPlayed > 0">
+        <div class="gstat">
+          <span class="gstat-val">{{ allStats.easy.gamesWon + allStats.medium.gamesWon + allStats.hard.gamesWon
+            }}</span>
+          <span class="gstat-lbl">Wins</span>
+        </div>
+        <div class="gstat-divider"></div>
+        <div class="gstat">
+          <span class="gstat-val">{{ allStats.easy.gamesPlayed + allStats.medium.gamesPlayed + allStats.hard.gamesPlayed
+            }}</span>
+          <span class="gstat-lbl">Played</span>
+        </div>
+        <div class="gstat-divider"></div>
+        <div class="gstat">
+          <span class="gstat-val">
+            {{ allStats.easy.bestStreak > allStats.medium.bestStreak
+            ? (allStats.easy.bestStreak > allStats.hard.bestStreak ? allStats.easy.bestStreak :
+            allStats.hard.bestStreak)
+            : (allStats.medium.bestStreak > allStats.hard.bestStreak ? allStats.medium.bestStreak :
+            allStats.hard.bestStreak) }}
+          </span>
+          <span class="gstat-lbl">Best Streak</span>
+        </div>
+      </div>
+
+      <!-- ── How-to-play ── -->
+      <div class="how-to-play">
+        <div class="how-step">
+          <span class="step-num">1</span>
+          <span class="step-text">All cards reveal — memorise the pairs</span>
+        </div>
+        <div class="how-step">
+          <span class="step-num">2</span>
+          <span class="step-text">Cards flip face-down after the timer</span>
+        </div>
+        <div class="how-step">
+          <span class="step-num">3</span>
+          <span class="step-text">Tap two cards to find matching pairs</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SHOWING (PREVIEW) STATE -->
+  <div class="game-view" *ngIf="gameState === 'showing'">
+    <div class="game-board-container">
+
+      <div class="preview-header">
+        <span class="preview-label">👀 Memorise the pairs!</span>
+        <div class="preview-countdown">{{ previewTimeLeft.toFixed(1) }}s</div>
+      </div>
+
+      <div class="game-board">
+        <div *ngFor="let card of cards; trackBy: trackByCardId" class="game-card" [class.revealed]="card.isRevealed"
+          [class.matched]="card.isMatched">
+          <div class="card-inner">
+            <div class="card-back"><span class="card-question">?</span></div>
+            <div class="card-front"><span class="card-emoji">{{ card.emoji }}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best time reminder during preview -->
+      <div class="best-time-reminder" *ngIf="currentStats.bestTime !== null">
+        <ion-icon name="trophy-outline"></ion-icon>
+        <span>Best: {{ formatTime(currentStats.bestTime!) }} · {{ currentStats.bestMoves }} moves</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ PLAYING STATE -->
+  <div class="game-view" *ngIf="gameState === 'playing'">
+    <div class="game-board-container">
+
+      <div class="game-stats">
+        <div class="stat-box">
+          <span class="stat-icon">⏱️</span>
+          <div class="stat-content">
+            <div class="stat-label">Time</div>
+            <div class="stat-value">{{ formatTime(gameTimeElapsed) }}</div>
+          </div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">🎯</span>
+          <div class="stat-content">
+            <div class="stat-label">Moves</div>
+            <div class="stat-value">{{ moves }}</div>
+          </div>
+        </div>
+        <div class="stat-box">
+          <span class="stat-icon">✅</span>
+          <div class="stat-content">
+            <div class="stat-label">Matched</div>
+            <div class="stat-value">{{ matchedPairs }}/{{ EMOJI_PAIRS.length }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live best-time comparison bar -->
+      <div class="live-best-bar" *ngIf="currentStats.bestTime !== null">
+        <ion-icon name="trophy-outline" class="live-best-icon"></ion-icon>
+        <span class="live-best-text">
+          Best: {{ formatTime(currentStats.bestTime!) }}
+        </span>
+        <!-- Pace indicator -->
+        <span class="pace-chip" [class.pace-ahead]="gameTimeElapsed < currentStats.bestTime!"
+          [class.pace-behind]="gameTimeElapsed >= currentStats.bestTime!">
+          {{ gameTimeElapsed < currentStats.bestTime! ? '⚡ On pace' : '🐢 Behind' }} </span>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="(matchedPairs / EMOJI_PAIRS.length) * 100"></div>
+        </div>
+        <span class="progress-text">{{ matchedPairs }} of {{ EMOJI_PAIRS.length }} pairs found</span>
+      </div>
+
+      <div class="game-board">
+        <button *ngFor="let card of cards; trackBy: trackByCardId" class="game-card" [class.revealed]="card.isRevealed"
+          [class.matched]="card.isMatched" [class.shaking]="card.isShaking" (click)="onCardClick(card)"
+          [disabled]="isGameLocked || card.isMatched || card.isRevealed"
+          [attr.aria-label]="card.isRevealed ? card.emoji : 'Hidden card'" [attr.aria-pressed]="card.isRevealed">
+          <div class="card-inner">
+            <div class="card-back"><span class="card-question">?</span></div>
+            <div class="card-front"><span class="card-emoji">{{ card.emoji }}</span></div>
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════ COMPLETED STATE -->
+  <div class="game-view" *ngIf="gameState === 'completed'">
+    <div class="completion-container">
+      <div class="completion-card">
+
+        <!-- 🏆 NEW RECORD BANNER — shown only when best is beaten -->
+        <div class="new-record-banner" *ngIf="isNewBestTime || isNewBestMoves">
+          <div class="record-confetti">🎊</div>
+          <div class="record-text">
+            <span class="record-title">NEW RECORD!</span>
+            <span class="record-sub">
+              <span *ngIf="isNewBestTime">⚡ Best Time </span>
+              <span *ngIf="isNewBestTime && isNewBestMoves"> &amp; </span>
+              <span *ngIf="isNewBestMoves">🎯 Fewest Moves</span>
+            </span>
+          </div>
+          <div class="record-confetti">🎊</div>
+        </div>
+
+        <div class="completion-header">
+          <h1>🎉 You Did It!</h1>
+          <p>{{ getPerformanceMessage() }}</p>
+        </div>
+
+        <div class="star-rating">
+          <span *ngFor="let i of [1,2,3]" class="star" [class.filled]="i <= getStarRating()">⭐</span>
+        </div>
+
+        <!-- Score grid — highlight new records with gold -->
+        <div class="score-grid">
+          <div class="score-item" [class.score-item--record]="isNewBestTime">
+            <div class="score-icon">⏱️</div>
+            <div class="score-label">Time <span class="record-crown" *ngIf="isNewBestTime">👑</span></div>
+            <div class="score-value">{{ formatTime(lastScore?.timeElapsed || 0) }}</div>
+            <div class="score-prev" *ngIf="!isNewBestTime && currentStats.bestTime !== null">
+              Best: {{ formatTime(currentStats.bestTime!) }}
+            </div>
+          </div>
+          <div class="score-item" [class.score-item--record]="isNewBestMoves">
+            <div class="score-icon">🎯</div>
+            <div class="score-label">Moves <span class="record-crown" *ngIf="isNewBestMoves">👑</span></div>
+            <div class="score-value">{{ lastScore?.moves }}</div>
+            <div class="score-prev" *ngIf="!isNewBestMoves && currentStats.bestMoves !== null">
+              Best: {{ currentStats.bestMoves }}
+            </div>
+          </div>
+          <div class="score-item">
+            <div class="score-icon">📊</div>
+            <div class="score-label">Accuracy</div>
+            <div class="score-value">{{ getAccuracy() }}%</div>
+          </div>
+          <div class="score-item">
+            <div class="score-icon">🔥</div>
+            <div class="score-label">Streak</div>
+            <div class="score-value">{{ currentStats.currentStreak }}
+              <span class="streak-best"
+                *ngIf="currentStats.currentStreak === currentStats.bestStreak && currentStats.bestStreak > 1">🏆</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Win rate for this difficulty -->
+        <div class="win-rate-row">
+          <span class="wr-label">{{ DIFFICULTY_SETTINGS[difficulty].name }} win rate</span>
+          <div class="wr-bar-wrap">
+            <div class="wr-bar">
+              <div class="wr-fill" [style.width.%]="winRate(difficulty)"></div>
+            </div>
+            <span class="wr-pct">{{ winRate(difficulty) }}%</span>
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="play-again-btn" (click)="startGame(difficulty)">🔄 Play Again</button>
+          <button class="back-btn" (click)="restartGame()">← Change Difficulty</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</ion-content>

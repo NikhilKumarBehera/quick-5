@@ -1,21 +1,20 @@
 <ion-content [fullscreen]="true" class="accuracy-content" [scrollEvents]="true" (ionScroll)="onScroll($event)">
 
-  <!-- Header Section -->
+  <!-- ══════════════════════ STICKY PURPLE HEADER -->
   <div class="accuracy-header" [class.scrolled]="isScrolled">
     <div class="header-top">
       <ion-button fill="clear" class="back-button" (click)="goBack()">
         <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
       </ion-button>
       <h1 class="page-title">Accuracy</h1>
-
-      <!-- Compact accuracy - shows when scrolled -->
-      <div class="compact-count"  [class]="getAccuracyClass(overallAccuracy)" *ngIf="isScrolled">
+      <!-- Compact badge top-right when scrolled -->
+      <div class="compact-count" [class]="getAccuracyClass(overallAccuracy)" *ngIf="isScrolled">
         <ion-icon name="trending-up"></ion-icon>
         <span>{{ overallAccuracy }}%</span>
       </div>
     </div>
 
-    <!-- Overall accuracy card - hides when scrolled -->
+    <!-- Accuracy ring + AI character — hidden on scroll -->
     <div class="stats-card" [class.hidden]="isScrolled">
       <div class="accuracy-circle">
         <svg viewBox="0 0 200 200" class="progress-svg">
@@ -24,19 +23,134 @@
             [style.stroke-dashoffset]="getCircleOffset(overallAccuracy)">
           </circle>
         </svg>
-        <div class="accuracy-text">
-          <div class="accuracy-number">{{ overallAccuracy }}%</div>
-          <div class="accuracy-label">Overall</div>
+
+        <!-- AI Character inside ring — rendered via inline SVG -->
+        <div class="char-in-ring">
+          <div class="char-svg-wrap" [innerHTML]="charSvgMap[selectedCharacter.id]"></div>
+          <div class="char-accuracy-pct" [style.color]="getAccuracyColor(overallAccuracy)">
+            {{ overallAccuracy }}%
+          </div>
         </div>
       </div>
+
       <p class="accuracy-subtitle">{{ getAccuracyMessage(overallAccuracy) }}</p>
+
+      <button class="change-char-btn" (click)="openCharacterPicker()">
+        <ion-icon name="people-outline"></ion-icon>
+        <span>Change Character</span>
+      </button>
     </div>
   </div>
 
-  <!-- Content Area -->
+  <!-- ══════════════════════ CHARACTER PICKER SHEET -->
+  <div class="char-picker-backdrop" *ngIf="showCharPicker" (click)="closeCharacterPicker()"></div>
+  <div class="char-picker-sheet" [class.open]="showCharPicker">
+    <div class="sheet-handle"></div>
+    <h3 class="sheet-title">Choose Your Character</h3>
+    <div class="char-picker-grid">
+      <button *ngFor="let char of characters" class="char-option"
+        [class.char-option--selected]="selectedCharacter.id === char.id" (click)="selectCharacter(char)">
+        <!-- Mini SVG character preview -->
+        <div class="char-mini-svg" [innerHTML]="charSvgMap[char.id]"></div>
+        <span class="char-opt-name">{{ char.name }}</span>
+        <span class="char-opt-desc">{{ char.description }}</span>
+        <ion-icon name="checkmark-circle" class="char-check" *ngIf="selectedCharacter.id === char.id"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════ CONTENT AREA -->
   <div class="content-wrapper">
 
-    <!-- Time Period Selector -->
+    <!-- ── Light-theme streak block ── -->
+    <div class="streak-block">
+      <div class="streak-pills-row">
+        <div class="streak-pill streak-pill--current">
+          <div class="streak-pill-icon streak-pill-icon--green">
+            <ion-icon name="flame"></ion-icon>
+          </div>
+          <div class="streak-pill-info">
+            <span class="streak-pill-count">{{ currentStreak }}</span>
+            <span class="streak-pill-unit">DAY{{ currentStreak !== 1 ? 'S' : '' }}</span>
+            <span class="streak-pill-lbl">Current Streak</span>
+          </div>
+        </div>
+        <div class="streak-pill streak-pill--best">
+          <div class="streak-pill-icon streak-pill-icon--amber">
+            <ion-icon name="trophy"></ion-icon>
+          </div>
+          <div class="streak-pill-info">
+            <span class="streak-pill-count">{{ longestStreak }}</span>
+            <span class="streak-pill-unit">DAY{{ longestStreak !== 1 ? 'S' : '' }}</span>
+            <span class="streak-pill-lbl">Longest Streak</span>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="streak-calendar-title">Your Streaks</h4>
+      <div class="week-calendar">
+        <div *ngFor="let day of weekDays" class="day-pill" [class.day-pill--active]="day.active"
+          [class.day-pill--today]="day.isToday">
+          <span class="day-name">{{ day.label }}</span>
+          <ion-icon [name]="day.active ? 'flash' : 'flash-outline'" class="day-flash"
+            [class.day-flash--active]="day.active">
+          </ion-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Redesigned stats panel (replaces quick stats) ── -->
+    <div class="stats-panel">
+      <!-- Accuracy donut mini -->
+      <div class="stats-panel-hero">
+        <div class="mini-donut-wrap">
+          <svg viewBox="0 0 80 80" class="mini-donut-svg">
+            <circle cx="40" cy="40" r="32" class="mini-donut-track"></circle>
+            <circle cx="40" cy="40" r="32" class="mini-donut-fill" [style.stroke]="getAccuracyColor(overallAccuracy)"
+              [style.stroke-dashoffset]="(2*3.14159*32) - (overallAccuracy/100)*(2*3.14159*32)">
+            </circle>
+          </svg>
+          <span class="mini-donut-pct" [style.color]="getAccuracyColor(overallAccuracy)">
+            {{ overallAccuracy }}%
+          </span>
+        </div>
+        <div class="stats-hero-text">
+          <span class="stats-hero-label">Overall Accuracy</span>
+          <span class="stats-hero-msg">{{ getAccuracyMessage(overallAccuracy) }}</span>
+        </div>
+      </div>
+
+      <!-- Three stat tiles -->
+      <div class="stats-tiles">
+        <div class="stat-tile stat-tile--attempts">
+          <div class="stat-tile-icon">🎯</div>
+          <span class="stat-tile-val">{{ totalAttempted }}</span>
+          <span class="stat-tile-lbl">Attempts</span>
+        </div>
+        <div class="stat-tile stat-tile--correct">
+          <div class="stat-tile-icon">✅</div>
+          <span class="stat-tile-val">{{ totalCorrect }}</span>
+          <span class="stat-tile-lbl">Correct</span>
+          <div class="stat-tile-bar">
+            <div class="stat-tile-bar-fill stat-tile-bar-fill--green"
+              [style.width.%]="totalAttempted > 0 ? (totalCorrect/totalAttempted)*100 : 0">
+            </div>
+          </div>
+        </div>
+        <div class="stat-tile stat-tile--wrong">
+          <div class="stat-tile-icon">❌</div>
+          <span class="stat-tile-val">{{ totalWrong }}</span>
+          <span class="stat-tile-lbl">Wrong</span>
+          <div class="stat-tile-bar">
+            <div class="stat-tile-bar-fill stat-tile-bar-fill--red"
+              [style.width.%]="totalAttempted > 0 ? (totalWrong/totalAttempted)*100 : 0">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Period selector -->
     <div class="period-selector">
       <button *ngFor="let period of periods" class="period-btn" [class.active]="selectedPeriod === period.value"
         (click)="selectPeriod(period.value)">
@@ -44,7 +158,7 @@
       </button>
     </div>
 
-    <!-- Interactive Chart -->
+    <!-- Chart -->
     <div class="chart-card">
       <h3 class="chart-title">Accuracy Trend</h3>
       <div class="chart-container">
@@ -52,7 +166,7 @@
       </div>
     </div>
 
-    <!-- Category Accuracy Cards -->
+    <!-- Category cards -->
     <div class="section-header">
       <h3>Category Performance</h3>
       <p>Tap to view details</p>
@@ -62,56 +176,28 @@
       <div *ngFor="let category of categoryStats" class="category-card-compact" [class.low]="category.accuracy < 40"
         [class.medium]="category.accuracy >= 40 && category.accuracy < 70" [class.high]="category.accuracy >= 70"
         (click)="viewCategoryDetails(category)">
-
         <div class="card-left">
           <div class="category-icon-small">{{ category.icon }}</div>
           <div class="category-info">
             <h4>{{ category.name }}</h4>
-            <div class="mini-stats">
-              <span>{{ category.correct }}/{{ category.attempted }}</span>
-            </div>
+            <div class="mini-stats">{{ category.correct }}/{{ category.attempted }}</div>
           </div>
         </div>
-
         <div class="card-right">
           <div class="accuracy-display" [style.color]="getAccuracyColor(category.accuracy)">
             {{ category.accuracy }}%
           </div>
           <div class="accuracy-bar-mini">
             <div class="fill" [style.width.%]="category.accuracy"
-              [style.background]="getAccuracyColor(category.accuracy)">
-            </div>
+              [style.background]="getAccuracyColor(category.accuracy)"></div>
           </div>
           <div class="badge-mini" [class]="getAccuracyClass(category.accuracy)">
             {{ getAccuracyLevel(category.accuracy) }}
           </div>
         </div>
-
         <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
       </div>
     </div>
 
-    <!-- Quick Stats -->
-    <div class="quick-stats">
-      <div class="quick-stat-card">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-value">{{ totalAttempted }}</div>
-        <div class="stat-label">Total Attempts</div>
-      </div>
-
-      <div class="quick-stat-card">
-        <div class="stat-icon">✅</div>
-        <div class="stat-value">{{ totalCorrect }}</div>
-        <div class="stat-label">Correct Answers</div>
-      </div>
-
-      <div class="quick-stat-card">
-        <div class="stat-icon">🔥</div>
-        <div class="stat-value">{{ bestStreak }}</div>
-        <div class="stat-label">Best Streak</div>
-      </div>
-    </div>
-
   </div>
-
 </ion-content>

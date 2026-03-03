@@ -1,0 +1,130 @@
+// Option Button Component Styles
+
+@import '../../styles/variables.scss';
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.option-button {
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 56px;
+  --border-width: 2px;
+  --border-color: rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  text-align: left;
+
+  // States
+  &.state-default {
+    --border-color: var(--ion-color-medium-shade);
+    color: var(--ion-color-dark);
+
+    &:hover:not(.disabled) {
+      --border-color: var(--ion-color-primary);
+      background-color: rgba(102, 126, 234, 0.05);
+    }
+  }
+
+  &.state-selected {
+    --border-color: var(--ion-color-primary);
+    --box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    color: var(--ion-color-primary);
+  }
+
+  &.state-correct {
+    --border-color: var(--ion-color-success);
+    --box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.05));
+    color: var(--ion-color-success);
+  }
+
+  &.state-incorrect {
+    --border-color: var(--ion-color-danger);
+    --box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(220, 38, 38, 0.05));
+    color: var(--ion-color-danger);
+  }
+
+  // Sizes
+  &.size-small {
+    --min-height: 44px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    font-size: 13px;
+
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+
+  &.size-medium {
+    --min-height: 56px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    font-size: 14px;
+
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+
+  &.size-large {
+    --min-height: 68px;
+    --padding-start: 20px;
+    --padding-end: 20px;
+    font-size: 16px;
+
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+
+  // Disabled
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  // Icon styling
+  &.has-icon {
+    ion-icon[slot='start'] {
+      margin-right: 12px;
+    }
+  }
+}
+
+.option-text {
+  flex: 1;
+  text-align: left;
+  word-break: break-word;
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .option-button {
+    &.size-medium {
+      --min-height: 48px;
+      --padding-start: 12px;
+      --padding-end: 12px;
+      font-size: 13px;
+    }
+
+    &.size-large {
+      --min-height: 56px;
+      --padding-start: 16px;
+      --padding-end: 16px;
+      font-size: 14px;
+    }
+  }
+}

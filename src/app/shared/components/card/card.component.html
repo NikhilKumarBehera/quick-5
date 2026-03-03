@@ -1,0 +1,48 @@
+<ion-card
+  [ngClass]="[
+    'app-card',
+    'variant-' + variant,
+    'size-' + size,
+    { 'has-shadow': hasShadow, 'is-clickable': isClickable }
+  ]"
+  [attr.role]="isClickable ? 'button' : 'region'"
+  [attr.aria-label]="title || 'Card'"
+  [attr.tabindex]="isClickable ? 0 : -1"
+  (click)="onCardClick()"
+  (keydown.enter)="isClickable && onCardClick()"
+  (keydown.space)="isClickable && onCardClick()">
+  
+  <ion-card-header *ngIf="title">
+    <div class="card-header-content">
+      <ion-icon 
+        *ngIf="icon && iconPosition === 'start'" 
+        [name]="icon" 
+        class="card-icon"
+        aria-hidden="true">
+      </ion-icon>
+      
+      <div class="card-header-text">
+        <ion-card-title [attr.aria-level]="2">
+          {{ title }}
+        </ion-card-title>
+        
+        <ion-card-subtitle 
+          *ngIf="subtitle"
+          role="doc-subtitle">
+          {{ subtitle }}
+        </ion-card-subtitle>
+      </div>
+      
+      <ion-icon 
+        *ngIf="icon && iconPosition === 'end'" 
+        [name]="icon" 
+        class="card-icon"
+        aria-hidden="true">
+      </ion-icon>
+    </div>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ng-content></ng-content>
+  </ion-card-content>
+</ion-card>

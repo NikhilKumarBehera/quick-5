@@ -1,16 +1,26 @@
 // Hangman Game Styles
 .hangman-content {
     --background: linear-gradient(135deg, #f9fafb 0%, #ede9fe 100%);
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+}
+
+// Ensure header doesn't overlap
+ion-header {
+    z-index: 99;
+    position: relative;
 }
 
 // ==================== HEADER ====================
 .hangman-toolbar {
     --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 40px 16px;
+    padding: 40px 16px 50px; // Increased bottom padding for white shelf
     position: sticky;
     top: 0;
     z-index: 100;
-    transition: padding 0.3s ease; // Only animate padding
+    transition: padding 0.3s ease;
 
     &::after {
         content: '';
@@ -21,10 +31,11 @@
         height: 30px;
         background: #f8f9fa;
         border-radius: 30px 30px 0 0;
+        z-index: 1;
     }
 
     &.scrolled {
-        padding: 20px 16px 20px;
+        padding: 20px 16px 44px;
 
         .stats-card {
             max-height: 0;
@@ -122,7 +133,8 @@
 
 // ==================== MAIN WRAPPER ====================
 .hangman-wrapper {
-    padding: 16px;
+    padding: 0 16px 16px;
+    padding-top: calc(var(--ion-safe-area-top) + 145px); /* Account for header height */
     min-height: 100%;
     display: flex;
     flex-direction: column;
@@ -175,7 +187,7 @@
 
 // ==================== GAME CONTAINER ====================
 .game-container {
-    flex: 1;
+    flex: 0.3;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -408,8 +420,9 @@
 .word-display-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     align-items: center;
+    min-height: 100px; /* Reserve space for hint to prevent keyboard jump */
 }
 
 .word-display {
@@ -479,9 +492,27 @@
     font-weight: 500;
     text-align: center;
     border: 2px solid #fcd34d;
-    animation: slideDown 0.3s ease-out;
     box-shadow: 0 4px 12px rgba(252, 211, 77, 0.3);
-
+    min-height: 40px;
+    
+    // Hidden state - takes up space but invisible
+    opacity: 0;
+    visibility: hidden;
+    max-height: 0;
+    padding: 0 14px;
+    margin: 0;
+    overflow: hidden;
+    transition: all 0.3s ease-out;
+    
+    // Visible state - slides down and becomes visible
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+        max-height: 100px;
+        padding: 8px 14px;
+        margin: 0;
+    }
+    
     ion-icon {
         font-size: 16px;
         color: #f59e0b;
@@ -1005,6 +1036,10 @@
 
 // ==================== RESPONSIVE ====================
 @media (max-width: 375px) {
+    .hangman-wrapper {
+        padding-top: calc(var(--ion-safe-area-top) + 120px); /* Slightly less on small screens */
+    }
+
     .letter-box {
         width: 26px;
         height: 36px;
@@ -1022,6 +1057,10 @@
 }
 
 @media (min-width: 768px) {
+    .hangman-wrapper {
+        padding-top: calc(var(--ion-safe-area-top) + 140px); /* More space on tablets */
+    }
+
     .game-container {
         max-height: calc(100vh - 180px);
     }
